@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="notifications-page">
+    <div class="page-header">
+        <h1>Notifications</h1>
+        <a href="{{ url_for('index') }}" class="back-link">← Back Home</a>
+    </div>
+
+    <div class="notifications-container">
+        {% if notifications %}
+        <div class="notifications-list">
+            {% for notification in notifications %}
+            <div class="notification-item {% if not notification.read %}unread{% endif %}">
+                <div class="notification-header">
+                    <h4>{{ notification.title }}</h4>
+                    <time>{{ notification.created_at }}</time>
+                </div>
+                
+                {% if notification.content %}
+                <p class="notification-content">{{ notification.content }}</p>
+                {% endif %}
+                
+                {% if notification.link %}
+                <a href="{{ notification.link }}" class="notification-link">View →</a>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-notifications">
+            <div class="empty-state">
+                <h3>All caught up!</h3>
+                <p>No notifications to show right now.</p>
+                <a href="{{ url_for('index') }}" class="back-home-btn">Return Home</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
