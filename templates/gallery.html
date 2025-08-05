@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="gallery-page">
+    <div class="page-header">
+        <h1>Art Gallery</h1>
+        <a href="{{ url_for('index') }}" class="back-link">← Back Home</a>
+    </div>
+
+    <div class="gallery-container">
+        <div class="gallery-masonry stagger-animation">
+            {% for image in images %}
+            <div class="gallery-card" onclick="window.location.href='{{ url_for('gallery_image', image_id=image.id) }}'">
+                <img src="/api/optimize_image/uploads/gallery/{{ image.filename }}?size=medium" 
+                     data-src="uploads/gallery/{{ image.filename }}"
+                     alt="{{ image.title }}" 
+                     class="gallery-card-img"
+                     loading="lazy">
+                <div class="card-overlay">
+                    <h3 class="card-title">{{ image.title }}</h3>
+                    {% if image.caption %}
+                    <p class="card-caption">{{ image.caption[:100] }}{% if image.caption|length > 100 %}...{% endif %}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
