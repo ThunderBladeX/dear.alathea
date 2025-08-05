@@ -10,7 +10,7 @@ from functools import wraps
 import uuid
 
 app = Flask(__name__)
-app.secret_key = 'your-secret-key-change-this'
+app.secret_key = 'cMUHHMCpCiHMjWdbhtkamKIDu'
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
