@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="admin-page">
+    <div class="admin-header">
+        <h1>Admin Panel</h1>
+        <a href="{{ url_for('index') }}" class="back-link">← Back to Site</a>
+    </div>
+
+    <div class="admin-content">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for message in messages %}
+                        <div class="flash-message success">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <div class="upload-sections">
+            <!-- Gallery Upload -->
+            <div class="upload-section">
+                <h3>Upload Gallery Image</h3>
+                <form method="POST" enctype="multipart/form-data" class="upload-form">
+                    <input type="hidden" name="type" value="gallery">
+                    
+                    <div class="form-group">
+                        <label for="gallery-file">Image File:</label>
+                        <input type="file" id="gallery-file" name="file" accept="image/*" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="gallery-title">Title:</label>
+                        <input type="text" id="gallery-title" name="title" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="gallery-caption">Caption (optional):</label>
+                        <textarea id="gallery-caption" name="caption" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="gallery-tags">Tags (comma-separated):</label>
+                        <input type="text" id="gallery-tags" name="tags" placeholder="portrait, digital art, fantasy">
+                    </div>
+                    
+                    <button type="submit" class="upload-btn">Upload Image</button>
+                </form>
+            </div>
+
+            <!-- OC Upload -->
+            <div class="upload-section">
+                <h3>Create Character</h3>
+                <form method="POST" enctype="multipart/form-data" class="upload-form">
+                    <input type="hidden" name="type" value="oc">
+                    
+                    <div class="form-group">
+                        <label for="oc-name">Character Name:</label>
+                        <input type="text" id="oc-name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="oc-base">Base Image (T-pose):</label>
+                        <input type="file" id="oc-base" name="base_image" accept="image/*" required>
+                        <small>Recommended: 800×1200px PNG with transparent background</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="oc-profile">Profile Image (for folder thumbnail):</label>
+                        <input type="file" id="oc-profile" name="profile_image" accept="image/*">
+                        <small>Recommended: 200×200px, headshot or bust</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="oc-age">Age:</label>
+                        <input type="text" id="oc-age" name="age">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="oc-personality">Personality:</label>
+                        <textarea id="oc-personality" name="personality" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="oc-description">Description:</label>
+                        <textarea id="oc-description" name="description" rows="4"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="oc-backstory">Backstory:</label>
+                        <textarea id="oc-backstory" name="backstory" rows="5"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="upload-btn">Create Character</button>
+                </form>
+            </div>
+
+            <!-- Blog Post -->
+            <div class="upload-section">
+                <h3>Create Blog Post</h3>
+                <form method="POST" enctype="multipart/form-data" class="upload-form">
+                    <input type="hidden" name="type" value="blog">
+                    
+                    <div class="form-group">
+                        <label for="blog-title">Post Title:</label>
+                        <input type="text" id="blog-title" name="title" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="blog-summary">Summary (for previews):</label>
+                        <textarea id="blog-summary" name="summary" rows="2" placeholder="Brief description of your post..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="blog-featured">Featured Image (optional):</label>
+                        <input type="file" id="blog-featured" name="featured_image" accept="image/*">
+                        <small>Recommended: 1200×600px</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="blog-content">Content:</label>
+                        <textarea id="blog-content" name="content" rows="10" required placeholder="Write your blog post here..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="upload-btn">Create Post</button>
+                </form>
+            </div>
+
+            <!-- Data Management -->
+            <div class="upload-section">
+                <h3>Data Management</h3>
+                <div class="data-actions">
+                    <button class="action-btn export-btn" onclick="exportData()">
+                        📤 Export All Data
+                    </button>
+                    <div class="import-section">
+                        <label for="import-file" class="action-btn import-btn">
+                            📥 Import Data
+                        </label>
+                        <input type="file" id="import-file" accept=".json" style="display: none;" onchange="importData(this)">
+                    </div>
+                </div>
+                
+                <div class="data-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">{{ stats.gallery_count or 0 }}</span>
+                        <span class="stat-label">Gallery Images</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">{{ stats.oc_count or 0 }}</span>
+                        <span class="stat-label">Characters</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">{{ stats.blog_count or 0 }}</span>
+                        <span class="stat-label">Blog Posts</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">{{ stats.comment_count or 0 }}</span>
+                        <span class="stat-label">Comments</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function exportData() {
+    fetch('/admin/export')
+        .then(response => response.blob())
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `site_backup_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        })
+        .catch(error => {
+            console.error('Export failed:', error);
+            alert('Export failed. Please try again.');
+        });
+}
+
+function importData(input) {
+    const file = input.files[0];
+    if (!file) return;
+    
+    const formData = new FormData();
+    formData.append('import_file', file);
+    
+    fetch('/admin/import', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            alert('Data imported successfully!');
+            location.reload();
+        } else {
+            alert('Import failed: ' + (result.error || 'Unknown error'));
+        }
+    })
+    .catch(error => {
+        console.error('Import failed:', error);
+        alert('Import failed. Please try again.');
+    });
+}
+</script>
+{% endblock %}
