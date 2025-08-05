@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="blog-post-page">
+    <div class="post-header">
+        <h1>{{ post.title }}</h1>
+        <div class="post-meta">
+            <time>{{ post.created_at }}</time>
+            {% if post.updated_at != post.created_at %}
+            <span class="updated">• Updated {{ post.updated_at }}</span>
+            {% endif %}
+        </div>
+        <a href="{{ url_for('blog') }}" class="back-link">← Back to Blog</a>
+    </div>
+
+    <div class="post-content">
+        <div class="post-body">
+            {% if post.featured_image %}
+            <img src="/api/optimize_image/uploads/blog/{{ post.featured_image }}?size=large" 
+                 data-src="uploads/blog/{{ post.featured_image }}"
+                 alt="{{ post.title }}" 
+                 class="featured-image"
+                 loading="eager">
+            {% endif %}
+            
+            <div class="content-text">
+                {{ post.content | replace('\n', '<br>') | safe }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Comments Section -->
+    <div class="comments-section">
+        <h3>Comments</h3>
+        
+        {% if session.user_id %}
+        <form method="POST" action="{{ url_for('add_comment') }}" class="comment-form">
+            <input type="hidden" name="content_type" value="blog">
+            <input type="hidden" name="content_id" value="{{ post.id }}">
+            <textarea name="comment" placeholder="Share your thoughts on this post..." required></textarea>
+            <button type="submit" class="comment-btn">Post Comment</button>
+        </form>
+        {% else %}
+        <p class="login-prompt">
+            <a href="{{ url_for('login') }}">Login</a> to leave a comment!
+        </p>
+        {% endif %}
+
+        <div class="comments-list">
+            {% for comment in comments %}
+            <div class="comment">
+                <div class="comment-header">
+                    <strong>{{ comment.username or 'Anonymous' }}</strong>
+                    {% if comment.country %}
+                    <span class="country-tag">from {{ comment.country }}</span>
+                    {% endif %}
+                    <time>{{ comment.created_at }}</time>
+                </div>
+                <p class="comment-content">{{ comment.content }}</p>
+                
+                <div class="comment-actions">
+                    <button class="vote-btn upvote" data-comment="{{ comment.id }}">
+                        ↑ {{ comment.upvotes }}
+                    </button>
+                    <button class="vote-btn downvote" data-comment="{{ comment.id }}">
+                        ↓ {{ comment.downvotes }}
+                    </button>
+                    {% if session.user_id %}
+                    <button class="reply-btn" onclick="toggleReply({{ comment.id }})">Reply</button>
+                    {% endif %}
+                </div>
+
+                {% if session.user_id %}
+                <div class="reply-form" id="reply-{{ comment.id }}" style="display: none;">
+                    <form method="POST" action="{{ url_for('add_comment') }}">
+                        <input type="hidden" name="content_type" value="blog">
+                        <input type="hidden" name="content_id" value="{{ post.id }}">
+                        <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                        <textarea name="comment" placeholder="Reply to {{ comment.username }}..." required></textarea>
+                        <button type="submit">Reply</button>
+                    </form>
+                </div>
+                {% endif %}
+
+                {% if comment.replies %}
+                <div class="replies">
+                    {% for reply in comment.replies %}
+                    <div class="comment reply">
+                        <div class="comment-header">
+                            <strong>{{ reply.username or 'Anonymous' }}</strong>
+                            {% if reply.country %}
+                            <span class="country-tag">from {{ reply.country }}</span>
+                            {% endif %}
+                            <time>{{ reply.created_at }}</time>
+                        </div>
+                        <p class="comment-content">{{ reply.content }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
