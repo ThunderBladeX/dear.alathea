@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="blog-page">
+    <div class="page-header">
+        <h1>Blog Posts</h1>
+        <a href="{{ url_for('index') }}" class="back-link">← Back Home</a>
+    </div>
+
+    <div class="blog-container">
+        <div class="blog-posts stagger-animation">
+            {% for post in posts %}
+            <article class="blog-preview" onclick="window.location.href='{{ url_for('blog_post', post_id=post.id) }}'">
+                <div class="post-header">
+                    <h2 class="post-title">{{ post.title }}</h2>
+                    <time class="post-date">{{ post.created_at }}</time>
+                </div>
+                
+                {% if post.featured_image %}
+                <div class="post-image">
+                    <img src="/api/optimize_image/uploads/blog/{{ post.featured_image }}?size=medium" 
+                         data-src="uploads/blog/{{ post.featured_image }}"
+                         alt="{{ post.title }}" 
+                         loading="lazy">
+                </div>
+                {% endif %}
+                
+                <div class="post-summary">
+                    {{ post.summary or post.content[:200] }}{% if (post.summary or post.content)|length > 200 %}...{% endif %}
+                </div>
+                
+                <div class="read-more">
+                    Read more →
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        
+        {% if not posts %}
+        <div class="empty-state">
+            <h3>No posts yet!</h3>
+            <p>Blog posts will appear here once you write them.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
