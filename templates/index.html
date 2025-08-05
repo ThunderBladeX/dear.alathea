@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="main-layout">
+    <!-- Left Sidebar -->
+    <div class="left-sidebar">
+        <div class="profile-section">
+            <div class="profile-image">
+                <img src="{{ url_for('static', filename='profile.jpg') }}" alt="Profile Picture" class="profile-pic">
+            </div>
+            <div class="profile-info">
+                <h2 class="username">
+                    {% if session.username %}
+                        {{ session.username }}
+                    {% else %}
+                        Artist Name
+                    {% endif %}
+                </h2>
+                <p class="welcome-msg">
+                    {% if session.username %}
+                        Welcome back, dear! ✨
+                    {% else %}
+                        Welcome to my cozy corner
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+
+        <div class="navigation-links">
+            {% if session.user_id %}
+            <a href="{{ url_for('notifications') }}" class="nav-link notifs-link">
+                <span class="nav-icon">🔔</span>
+                <span>Notifications</span>
+                {% if notifications %}
+                <span class="notif-count">{{ notifications|length }}</span>
+                {% endif %}
+            </a>
+            {% endif %}
+            
+            <a href="{{ url_for('commissions') }}" class="nav-link">
+                <span class="nav-icon">💖</span>
+                <span>Commissions</span>
+            </a>
+            
+            {% if not session.user_id %}
+            <a href="{{ url_for('login') }}" class="nav-link">
+                <span class="nav-icon">🌸</span>
+                <span>Login</span>
+            </a>
+            {% else %}
+            <a href="{{ url_for('logout') }}" class="nav-link">
+                <span class="nav-icon">🌿</span>
+                <span>Logout</span>
+            </a>
+            {% endif %}
+        </div>
+
+        <div class="character-art">
+            <img src="{{ url_for('static', filename='character_pose.png') }}" alt="Character Art" class="character-img">
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <!-- Top Navigation -->
+        <nav class="top-nav">
+            <a href="{{ url_for('gallery') }}" class="nav-tab" data-section="gallery">Gallery</a>
+            <a href="{{ url_for('ocs') }}" class="nav-tab" data-section="ocs">OCs</a>
+            <a href="{{ url_for('blog') }}" class="nav-tab" data-section="blog">Blog</a>
+        </nav>
+
+        <!-- Content Sections -->
+        <div class="content-wrapper">
+            <div class="scrollable-content">
+                <!-- Gallery Section -->
+                <div class="content-section gallery-section active">
+                    <h3 class="section-title">✨ Recent Artwork ✨</h3>
+                    <div class="gallery-grid">
+                        {% for image in gallery_images %}
+                        <div class="gallery-item" 
+                             data-title="{{ image.title }}" 
+                             data-caption="{{ image.caption or '' }}"
+                             data-date="{{ image.created_at }}"
+                             onclick="window.location.href='{{ url_for('gallery_image', image_id=image.id) }}'">
+                            <img src="{{ url_for('static', filename='uploads/gallery/' + image.filename) }}" 
+                                 alt="{{ image.title }}" class="gallery-img">
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- OCs Section -->
+                <div class="content-section ocs-section">
+                    <h3 class="section-title">🌻 My Characters 🌻</h3>
+                    <div class="ocs-grid">
+                        {% for oc in ocs %}
+                        <div class="oc-folder" onclick="window.location.href='{{ url_for('oc_detail', oc_id=oc.id) }}'">
+                            <div class="folder-tab">{{ oc.name }}</div>
+                            <div class="folder-content">
+                                <img src="{{ url_for('static', filename='uploads/ocs/' + oc.profile_image) }}" 
+                                     alt="{{ oc.name }}" class="oc-preview">
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Blog Section -->
+                <div class="content-section blog-section">
+                    <h3 class="section-title">📝 Recent Thoughts 📝</h3>
+                    <div class="blog-posts">
+                        {% for post in blog_posts %}
+                        <article class="blog-preview" onclick="window.location.href='{{ url_for('blog_post', post_id=post.id) }}'">
+                            <h4 class="post-title">{{ post.title }}</h4>
+                            <p class="post-summary">{{ post.summary or post.content[:150] + '...' if post.content|length > 150 else post.content }}</p>
+                            <time class="post-date">{{ post.created_at }}</time>
+                        </article>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info Panel -->
+            <div class="info-panel">
+                <div class="info-content">
+                    <h4>Hover over artwork to see details! ✨</h4>
+                    <p class="info-text">Click to view full size and leave comments</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
