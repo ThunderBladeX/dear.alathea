@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="image-detail-page">
+    <div class="image-header">
+        <h1>{{ image.title }}</h1>
+        <a href="{{ url_for('gallery') }}" class="back-link">← Back to Gallery</a>
+    </div>
+
+    <div class="image-content">
+        <div class="image-display">
+            <img src="/api/optimize_image/uploads/gallery/{{ image.filename }}?size=large" 
+                 data-src="uploads/gallery/{{ image.filename }}"
+                 alt="{{ image.title }}" 
+                 class="full-image"
+                 loading="eager">
+        </div>
+
+        <div class="image-info">
+            <div class="metadata">
+                <h3>Image Details</h3>
+                {% if image.caption %}
+                <p class="caption"><strong>Description:</strong> {{ image.caption }}</p>
+                {% endif %}
+                
+                {% if image.tags %}
+                <div class="tags">
+                    <strong>Tags:</strong>
+                    {% for tag in image.tags.split(',') %}
+                    <span class="tag">{{ tag.strip() }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <p class="upload-date"><strong>Uploaded:</strong> {{ image.created_at }}</p>
+                
+                {% if image.width and image.height %}
+                <p class="dimensions"><strong>Dimensions:</strong> {{ image.width }}×{{ image.height }}px</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Comments Section -->
+    <div class="comments-section">
+        <h3>Comments</h3>
+        
+        {% if session.user_id %}
+        <form method="POST" action="{{ url_for('add_comment') }}" class="comment-form">
+            <input type="hidden" name="content_type" value="gallery">
+            <input type="hidden" name="content_id" value="{{ image.id }}">
+            <textarea name="comment" placeholder="What do you think of this artwork?" required></textarea>
+            <button type="submit" class="comment-btn">Post Comment</button>
+        </form>
+        {% else %}
+        <p class="login-prompt">
+            <a href="{{ url_for('login') }}">Login</a> to leave a comment!
+        </p>
+        {% endif %}
+
+        <div class="comments-list">
+            {% for comment in comments %}
+            <div class="comment">
+                <div class="comment-header">
+                    <strong>{{ comment.username or 'Anonymous' }}</strong>
+                    {% if comment.country %}
+                    <span class="country-tag">from {{ comment.country }}</span>
+                    {% endif %}
+                    <time>{{ comment.created_at }}</time>
+                </div>
+                <p class="comment-content">{{ comment.content }}</p>
+                
+                <div class="comment-actions">
+                    <button class="vote-btn upvote" data-comment="{{ comment.id }}">
+                        ↑ {{ comment.upvotes }}
+                    </button>
+                    <button class="vote-btn downvote" data-comment="{{ comment.id }}">
+                        ↓ {{ comment.downvotes }}
+                    </button>
+                    {% if session.user_id %}
+                    <button class="reply-btn" onclick="toggleReply({{ comment.id }})">Reply</button>
+                    {% endif %}
+                </div>
+
+                {% if session.user_id %}
+                <div class="reply-form" id="reply-{{ comment.id }}" style="display: none;">
+                    <form method="POST" action="{{ url_for('add_comment') }}">
+                        <input type="hidden" name="content_type" value="gallery">
+                        <input type="hidden" name="content_id" value="{{ image.id }}">
+                        <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                        <textarea name="comment" placeholder="Reply to {{ comment.username }}..." required></textarea>
+                        <button type="submit">Reply</button>
+                    </form>
+                </div>
+                {% endif %}
+
+                {% if comment.replies %}
+                <div class="replies">
+                    {% for reply in comment.replies %}
+                    <div class="comment reply">
+                        <div class="comment-header">
+                            <strong>{{ reply.username or 'Anonymous' }}</strong>
+                            {% if reply.country %}
+                            <span class="country-tag">from {{ reply.country }}</span>
+                            {% endif %}
+                            <time>{{ reply.created_at }}</time>
+                        </div>
+                        <p class="comment-content">{{ reply.content }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
