@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="oc-detail-page" data-oc-id="{{ oc.id }}">
+    <div class="oc-header">
+        <h1 class="oc-name">{{ oc.name }}</h1>
+        <a href="{{ url_for('ocs') }}" class="back-link">← Back to Characters</a>
+    </div>
+
+    <div class="oc-content">
+        <div class="oc-display">
+            <div class="character-canvas" id="characterCanvas">
+                <img src="/api/optimize_image/uploads/ocs/{{ oc.base_image }}?size=large" 
+                     data-src="uploads/ocs/{{ oc.base_image }}"
+                     alt="{{ oc.name }} base" 
+                     class="base-character" 
+                     id="baseCharacter"
+                     loading="eager">
+                
+                {% for item in clothing_items %}
+                <img src="/api/optimize_image/uploads/ocs/{{ item.filename }}?size=large" 
+                     data-src="uploads/ocs/{{ item.filename }}"
+                     alt="{{ item.item_name }}" 
+                     class="clothing-item" 
+                     id="item-{{ item.id }}"
+                     style="z-index: {{ item.z_index }};"
+                     data-category="{{ item.category }}"
+                     loading="lazy">
+                {% endfor %}
+            </div>
+
+            <div class="clothing-controls">
+                <h3>👗 Outfit Toggle 👗</h3>
+                {% if clothing_items %}
+                <div class="clothing-categories">
+                    {% set categories = clothing_items|groupby('category') %}
+                    {% for category, items in categories %}
+                    <div class="category-group">
+                        <h4>{{ category.title() }}</h4>
+                        <div class="clothing-list" data-category="{{ category }}">
+                            {% for item in items %}
+                            <label class="clothing-toggle" data-item-id="{{ item.id }}" data-z-index="{{ item.z_index }}">
+                                <input type="checkbox" 
+                                       checked 
+                                       onchange="toggleClothing('item-{{ item.id }}')"
+                                       data-item="item-{{ item.id }}">
+                                <span class="clothing-name">{{ item.item_name }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="no-clothing">No clothing items yet. Add some through the admin panel!</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="oc-info">
+            <div class="info-section">
+                <h3>📖 Character Info</h3>
+                <div class="info-grid">
+                    {% if oc.age %}
+                    <div class="info-item">
+                        <strong>Age:</strong> {{ oc.age }}
+                    </div>
+                    {% endif %}
+                    
+                    {% if oc.personality %}
+                    <div class="info-item">
+                        <strong>Personality:</strong> {{ oc.personality }}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                {% if oc.description %}
+                <div class="description">
+                    <h4>Description</h4>
+                    <p>{{ oc.description }}</p>
+                </div>
+                {% endif %}
+                
+                {% if oc.backstory %}
+                <div class="backstory">
+                    <h4>Backstory</h4>
+                    <p>{{ oc.backstory }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Comments Section -->
+    <div class="comments-section">
+        <h3>💬 Comments</h3>
+        
+        {% if session.user_id %}
+        <form method="POST" action="{{ url_for('add_comment') }}" class="comment-form">
+            <input type="hidden" name="content_type" value="oc">
+            <input type="hidden" name="content_id" value="{{ oc.id }}">
+            <textarea name="comment" placeholder="Share your thoughts..." required></textarea>
+            <button type="submit" class="comment-btn">Post Comment</button>
+        </form>
+        {% else %}
+        <p class="login-prompt">
+            <a href="{{ url_for('login') }}">Login</a> to leave a comment!
+        </p>
+        {% endif %}
+
+        <div class="comments-list">
+            {% for comment in comments %}
+            <div class="comment">
+                <div class="comment-header">
+                    <strong>{{ comment.username or 'Anonymous' }}</strong>
+                    {% if comment.country %}
+                    <span class="country-tag">from {{ comment.country }}</span>
+                    {% endif %}
+                    <time>{{ comment.created_at }}</time>
+                </div>
+                <p class="comment-content">{{ comment.content }}</p>
+                
+                <div class="comment-actions">
+                    <button class="vote-btn upvote" data-comment="{{ comment.id }}">
+                        ↑ {{ comment.upvotes }}
+                    </button>
+                    <button class="vote-btn downvote" data-comment="{{ comment.id }}">
+                        ↓ {{ comment.downvotes }}
+                    </button>
+                    {% if session.user_id %}
+                    <button class="reply-btn" onclick="toggleReply({{ comment.id }})">Reply</button>
+                    {% endif %}
+                </div>
+
+                <!-- Reply form -->
+                {% if session.user_id %}
+                <div class="reply-form" id="reply-{{ comment.id }}" style="display: none;">
+                    <form method="POST" action="{{ url_for('add_comment') }}">
+                        <input type="hidden" name="content_type" value="oc">
+                        <input type="hidden" name="content_id" value="{{ oc.id }}">
+                        <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                        <textarea name="comment" placeholder="Reply to {{ comment.username }}..." required></textarea>
+                        <button type="submit">Reply</button>
+                    </form>
+                </div>
+                {% endif %}
+
+                <!-- Replies -->
+                {% if comment.replies %}
+                <div class="replies">
+                    {% for reply in comment.replies %}
+                    <div class="comment reply">
+                        <div class="comment-header">
+                            <strong>{{ reply.username or 'Anonymous' }}</strong>
+                            {% if reply.country %}
+                            <span class="country-tag">from {{ reply.country }}</span>
+                            {% endif %}
+                            <time>{{ reply.created_at }}</time>
+                        </div>
+                        <p class="comment-content">{{ reply.content }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+// Set body data attribute for JavaScript
+document.body.dataset.ocId = "{{ oc.id }}";
+</script>
+{% endblock %}
