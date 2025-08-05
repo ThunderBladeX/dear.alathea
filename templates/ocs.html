@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="ocs-page">
+    <div class="page-header">
+        <h1>My Characters</h1>
+        <a href="{{ url_for('index') }}" class="back-link">← Back Home</a>
+    </div>
+
+    <div class="ocs-container">
+        <div class="ocs-grid stagger-animation">
+            {% for oc in ocs %}
+            <div class="oc-folder" onclick="window.location.href='{{ url_for('oc_detail', oc_id=oc.id) }}'">
+                <div class="folder-tab">{{ oc.name }}</div>
+                <div class="folder-content">
+                    {% if oc.profile_image %}
+                    <img src="/api/optimize_image/uploads/ocs/{{ oc.profile_image }}?size=small" 
+                         data-src="uploads/ocs/{{ oc.profile_image }}"
+                         alt="{{ oc.name }}" 
+                         class="oc-preview"
+                         loading="lazy">
+                    {% else %}
+                    <div class="no-image">No Image</div>
+                    {% endif %}
+                    {% if oc.description %}
+                    <p class="oc-snippet">{{ oc.description[:80] }}{% if oc.description|length > 80 %}...{% endif %}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        {% if not ocs %}
+        <div class="empty-state">
+            <h3>No characters yet!</h3>
+            <p>Characters will appear here once you create them in the admin panel.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
