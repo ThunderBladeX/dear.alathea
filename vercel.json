@@ -7,8 +7,31 @@
   ],
   "routes": [
     {
+      "src": "/static/(.*)",
+      "dest": "/static/$1",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      }
+    },
+    {
+      "src": "/api/optimize_image/(.*)",
+      "dest": "run.py",
+      "headers": {
+        "Cache-Control": "public, max-age=86400"
+      }
+    },
+    {
       "src": "/(.*)",
       "dest": "run.py"
     }
-  ]
+  ],
+  "env": {
+    "FLASK_APP": "run.py",
+    "FLASK_ENV": "production"
+  },
+  "functions": {
+    "run.py": {
+      "maxDuration": 10
+    }
+  }
 }
