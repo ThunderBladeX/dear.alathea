@@ -44,14 +44,18 @@ def authenticate_user(username, password):
 def create_user(username, password, ip_address):
     """Create new user account"""
     password_hash = generate_password_hash(password)
-    
+
     try:
         execute_query('''
             INSERT INTO users (username, password_hash, ip_address)
             VALUES (?, ?, ?)
         ''', (username, password_hash, ip_address))
         return True
-    except:
+    except sqlite3.IntegrityError as e:
+        current_app.logger.error(f"Error creating user: {e}")  # Log the error
+        return False
+    except Exception as e:
+        current_app.logger.exception(f"Unexpected error creating user: {e}") #Include traceback
         return False
 
 def create_admin_user(config):
