@@ -32,13 +32,14 @@ def admin_required(f):
 
 def authenticate_user(username, password):
     """Authenticate user and return user data"""
-    user = execute_query(
-        'SELECT * FROM users WHERE username = ?', 
-        (username,), 
-        fetch='one'
-    )
-    
-    if user and check_password_hash(user['password_hash'], password):
+    try:
+        user = execute_query(
+            'SELECT * FROM users WHERE username = ?',
+            (username,),
+            fetch='one'
+        )
+
+        if user and check_password_hash(user['password_hash'], password):
             return user
         return None
     except Exception as e:
@@ -64,21 +65,24 @@ def create_user(username, password, ip_address):
 
 def create_admin_user(config):
     """Create admin user if doesn't exist"""
-    admin_exists = execute_query(
-        'SELECT id FROM users WHERE is_admin = TRUE', 
-        fetch='one'
-    )
-    
-    if not admin_exists:
-        admin_username = config.get('ADMIN_USERNAME', 'admin')
-        admin_password = config.get('ADMIN_PASSWORD', 'admin123')
-        password_hash = generate_password_hash(admin_password)
-        
-        execute_query('''
-            INSERT INTO users (username, password_hash, is_admin)
-            VALUES (?, ?, ?)
-        ''', (admin_username, password_hash, True))
-        
-        print(f"Created admin user: {admin_username}")
-        if admin_password == 'admin123':
-            print("⚠️  WARNING: Using default admin password! Set ADMIN_PASSWORD environment variable!")
+    try:
+        admin_exists = execute_query(
+            'SELECT id FROM users WHERE is_admin = TRUE',
+            fetch='one'
+        )
+
+        if not admin_exists:
+            admin_username = config.get('ADMIN_USERNAME', 'admin')
+            admin_password = config.get('ADMIN_PASSWORD', 'admin123')
+            password_hash = generate_password_hash(admin_password)
+
+            execute_query('''
+                INSERT INTO users (username, password_hash, is_admin)
+                VALUES (?, ?, ?)
+            ''', (admin_username, password_hash, True))
+
+            print(f"Created admin user: {admin_username}")
+            if admin_password == 'admin123':
+                print("⚠️  WARNING: Using default admin password! Set ADMIN_PASSWORD environment variable!")
+    except Exception as e:
+        current_app.logger.exception(f"Error creating admin user: {e}")
