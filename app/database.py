@@ -6,61 +6,72 @@ def get_db():
     """Get database connection for current request"""
     if 'db' not in g:
         config = current_app.config
-        
-        if config.get('IS_PRODUCTION'):
-            # Production: Use libsql for Turso
-            g.db = libsql_client.create_client(
-                url=config['TURSO_DATABASE_URL'],
-                auth_token=config['TURSO_AUTH_TOKEN']
-            )
-        else:
-            # Development: Use SQLite
-            g.db = sqlite3.connect(config['DATABASE_URL'])
-            g.db.row_factory = sqlite3.Row
-    
+
+        try:
+            if config.get('IS_PRODUCTION'):
+                # Production: Use libsql for Turso
+                g.db = libsql_client.create_client(
+                    url=config['TURSO_DATABASE_URL'],
+                    auth_token=config['TURSO_AUTH_TOKEN']
+                )
+            else:
+                # Development: Use SQLite
+                g.db = sqlite3.connect(config['DATABASE_URL'])
+                g.db.row_factory = sqlite3.Row
+        except Exception as e:
+            current_app.logger.exception(f"Error connecting to database: {e}")
+            raise
+
     return g.db
 
 def close_db(error):
     """Close database connection"""
     db = g.pop('db', None)
     if db is not None:
-        if hasattr(db, 'close'):
-            db.close()
+        try:
+            if hasattr(db, 'close'):
+                db.close()
+        except Exception as e:
+            current_app.logger.error(f"Error closing database connection: {e}")
 
 def execute_query(query, params=None, fetch=None):
     """Execute database query with proper connection handling"""
     db = get_db()
     config = current_app.config
-    
-    if config.get('IS_PRODUCTION'):
-        # Turso/libsql
-        if params:
-            result = db.execute(query, params)
+
+    try:
+        if config.get('IS_PRODUCTION'):
+            # Turso/libsql
+            if params:
+                result = db.execute(query, params)
+            else:
+                result = db.execute(query)
+
+            if fetch == 'all':
+                return result.rows
+            elif fetch == 'one':
+                rows = result.rows
+                return rows[0] if rows else None
+            else:
+                return result
         else:
-            result = db.execute(query)
-        
-        if fetch == 'all':
-            return result.rows
-        elif fetch == 'one':
-            rows = result.rows
-            return rows[0] if rows else None
-        else:
-            return result
-    else:
-        # SQLite
-        cursor = db.cursor()
-        if params:
-            cursor.execute(query, params)
-        else:
-            cursor.execute(query)
-        
-        if fetch == 'all':
-            return cursor.fetchall()
-        elif fetch == 'one':
-            return cursor.fetchone()
-        else:
-            db.commit()
-            return cursor
+            # SQLite
+            cursor = db.cursor()
+            if params:
+                cursor.execute(query, params)
+            else:
+                cursor.execute(query)
+
+            if fetch == 'all':
+                return cursor.fetchall()
+            elif fetch == 'one':
+                return cursor.fetchone()
+            else:
+                db.commit()
+                return cursor
+    except Exception as e:
+        current_app.logger.exception(f"Error executing query: {e}")
+        raise
 
 def init_db(config):
     """Initialize database with tables"""
