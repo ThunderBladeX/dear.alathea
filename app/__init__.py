@@ -44,5 +44,12 @@ def create_app():
         return render_template('error.html', 
                              error_code=500, 
                              error_message="Internal server error"), 500
-    
+
+    @app.errorhandler(404)
+    def page_not_found(error):
+        app.logger.warning(f"Page not found: {error}")
+        return render_template('error.html',
+                             error_code=404,
+                             error_message="Page not found"), 404
+
     return app
