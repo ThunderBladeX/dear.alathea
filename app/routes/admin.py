@@ -14,22 +14,23 @@ def upload():
     if request.method == 'POST':
         upload_type = request.form['type']
         
-        try:
-            if upload_type == 'gallery':
-                handle_gallery_upload(request)
-                flash('Gallery image uploaded successfully!')
-            elif upload_type == 'oc':
-                handle_oc_upload(request)
-                flash('Character created successfully!')
-            elif upload_type == 'blog':
-                handle_blog_upload(request)
-                flash('Blog post created successfully!')
-            elif upload_type == 'clothing':
-                handle_clothing_upload(request)
-                flash('Clothing item added successfully!')
-        except Exception as e:
-            flash(f'Upload failed: {str(e)}')
-    
+        upload_handlers = {
+            'gallery': handle_gallery_upload,
+            'oc': handle_oc_upload,
+            'blog': handle_blog_upload,
+            'clothing': handle_clothing_upload,
+        }
+
+        handler = upload_handlers.get(upload_type)
+        if handler:
+            try:
+                handler(request)
+                flash(f'{upload_type.capitalize()} uploaded successfully!')
+            except Exception as e:
+                flash(f'Upload failed: {str(e)}')
+        else:
+            flash('Invalid upload type')
+
     stats = get_admin_stats()
     return render_template('admin_upload.html', stats=stats)
 
