@@ -1,9 +1,6 @@
 from flask import g, current_app
 import libsql_client
 import sqlite3
-import threading
-
-_local = threading.local()
 
 def get_db():
     """Get database connection for current request"""
