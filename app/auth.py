@@ -2,6 +2,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask import session, current_app
 from app.database import execute_query
 from functools import wraps
+import sqlite3
 
 def login_required(f):
     @wraps(f)
@@ -38,8 +39,11 @@ def authenticate_user(username, password):
     )
     
     if user and check_password_hash(user['password_hash'], password):
-        return user
-    return None
+            return user
+        return None
+    except Exception as e:
+        current_app.logger.exception(f"Error authenticating user: {e}")
+        return None
 
 def create_user(username, password, ip_address):
     """Create new user account"""
@@ -52,10 +56,10 @@ def create_user(username, password, ip_address):
         ''', (username, password_hash, ip_address))
         return True
     except sqlite3.IntegrityError as e:
-        current_app.logger.error(f"Error creating user: {e}")  # Log the error
+        current_app.logger.error(f"Error creating user: {e}")
         return False
     except Exception as e:
-        current_app.logger.exception(f"Unexpected error creating user: {e}") #Include traceback
+        current_app.logger.exception(f"Unexpected error creating user: {e}")
         return False
 
 def create_admin_user(config):
