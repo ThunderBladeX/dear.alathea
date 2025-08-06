@@ -41,6 +41,7 @@ def create_app():
     # Register error handlers
     @app.errorhandler(500)
     def internal_error(error):
+        app.logger.exception(error)
         return render_template('error.html', 
                              error_code=500, 
                              error_message="Internal server error"), 500
