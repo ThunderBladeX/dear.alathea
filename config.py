@@ -7,7 +7,10 @@ class Config:
     # Database settings
     TURSO_DATABASE_URL = os.environ.get('TURSO_DATABASE_URL')
     TURSO_AUTH_TOKEN = os.environ.get('TURSO_AUTH_TOKEN')
-    
+
+    if not TURSO_DATABASE_URL or not TURSO_AUTH_TOKEN:
+        print("Warning: TURSO_DATABASE_URL or TURSO_AUTH_TOKEN not set.  Using SQLite fallback.")
+
     # Admin settings
     ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME')
     ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD')
@@ -29,4 +32,4 @@ class Config:
     @property
     def IS_PRODUCTION(self):
         """Check if running in production"""
-        return bool(self.TURSO_DATABASE_URL and self.TURSO_AUTH_TOKEN)
+        return self.TURSO_DATABASE_URL is not None and self.TURSO_AUTH_TOKEN is not None
