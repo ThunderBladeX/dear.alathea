@@ -5,19 +5,8 @@ import os
 import uuid
 
 def handle_file_upload(file, folder):
-    """Handle file upload with secure naming"""
-    if not file or not file.filename:
-        raise ValueError("No file provided")
-
-    filename = secure_filename(file.filename)
-    filename = f"{uuid.uuid4()}_{filename}"
-    filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], folder)
-    os.makedirs(filepath, exist_ok=True) # Ensure folder exists
-    filepath = os.path.join(filepath, filename)
-
-
-    file.save(filepath)
-    return filename
+    """Handle file upload using storage service"""
+    return upload_file(file, folder)
 
 def get_admin_stats():
     """Get statistics for admin dashboard"""
