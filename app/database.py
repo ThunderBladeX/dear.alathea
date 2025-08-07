@@ -55,7 +55,7 @@ class TursoHTTPClient:
         try:
             # Format the request for Turso's HTTP API
             request_data = {
-                "stmt": query
+                "stmt": query  # FIXED: Changed from "sql" to "stmt"
             }
             
             # Add parameters if provided
@@ -101,36 +101,24 @@ class TursoResult:
         if self._rows is None:
             self._rows = []
             
-            # Handle Turso's HTTP API response format
+            # Handle Turso's actual HTTP API response format
             if self.result_data and 'results' in self.result_data:
                 results = self.result_data['results']
                 if results and len(results) > 0:
-                    # Get column names
-                    columns = self.result_data.get('columns', [])
+                    result = results[0]  # Get first result object
+                    
+                    # Get column names and rows from the result object
+                    columns = result.get('columns', [])
+                    rows = result.get('rows', [])
                     
                     # Process each row
-                    for row_data in results:
+                    for row_data in rows:
                         if isinstance(row_data, list):
                             row_dict = {}
                             for i, value in enumerate(row_data):
                                 column_name = columns[i] if i < len(columns) else f'col_{i}'
                                 row_dict[column_name] = value
                             self._rows.append(row_dict)
-                        elif isinstance(row_data, dict):
-                            self._rows.append(row_data)
-            
-            # Alternative format handling
-            elif self.result_data and 'rows' in self.result_data:
-                columns = self.result_data.get('columns', [])
-                for row_data in self.result_data['rows']:
-                    if isinstance(row_data, list):
-                        row_dict = {}
-                        for i, value in enumerate(row_data):
-                            column_name = columns[i] if i < len(columns) else f'col_{i}'
-                            row_dict[column_name] = value
-                        self._rows.append(row_dict)
-                    else:
-                        self._rows.append(row_data)
         
         return self._rows
 
