@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, session, current_app
-from jinja2 import Markup
+from markupsafe import Markup
 from app.database import execute_query
 
 main_bp = Blueprint(
