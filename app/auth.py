@@ -1,5 +1,5 @@
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask import session, current_app
+from flask import session, current_app, redirect, url_for, flash
 from functools import wraps
 import sqlite3
 
@@ -16,7 +16,8 @@ def admin_required(f):
     def decorated_function(*args, **kwargs):
         if 'user_id' not in session:
             return redirect(url_for('auth.login'))
-
+        
+        # Import here to avoid circular imports
         from app.database import execute_query
         
         user = execute_query(
@@ -34,7 +35,9 @@ def admin_required(f):
 def authenticate_user(username, password):
     """Authenticate user and return user data"""
     try:
+        # Import here to avoid circular imports
         from app.database import execute_query
+        
         user = execute_query(
             'SELECT * FROM users WHERE username = ?',
             (username,),
@@ -53,7 +56,9 @@ def create_user(username, password, ip_address):
     password_hash = generate_password_hash(password)
 
     try:
+        # Import here to avoid circular imports
         from app.database import execute_query
+        
         execute_query('''
             INSERT INTO users (username, password_hash, ip_address)
             VALUES (?, ?, ?)
@@ -69,7 +74,9 @@ def create_user(username, password, ip_address):
 def create_admin_user(config):
     """Create admin user if doesn't exist"""
     try:
+        # Import here to avoid circular imports
         from app.database import execute_query
+        
         admin_exists = execute_query(
             'SELECT id FROM users WHERE is_admin = TRUE',
             fetch='one'
