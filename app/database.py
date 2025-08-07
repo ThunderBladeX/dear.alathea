@@ -1,7 +1,7 @@
 from flask import g, current_app
 import sqlite3
-import asyncio
-import threading
+import requests
+import json
 
 def get_db():
     """Get database connection for current request"""
@@ -10,23 +10,11 @@ def get_db():
 
         try:
             if config.get('IS_PRODUCTION'):
-                # Production: Use libsql for Turso with proper async handling
-                import libsql_client
-                
-                # Check if we're in an async context
-                try:
-                    loop = asyncio.get_running_loop()
-                    # If we get here, we're in an async context
-                    g.db = libsql_client.create_client(
-                        url=config['TURSO_DATABASE_URL'],
-                        auth_token=config['TURSO_AUTH_TOKEN']
-                    )
-                except RuntimeError:
-                    # No running event loop, create a sync wrapper
-                    g.db = SyncLibSQLWrapper(
-                        url=config['TURSO_DATABASE_URL'],
-                        auth_token=config['TURSO_AUTH_TOKEN']
-                    )
+                # Production: Use HTTP client for Turso instead of libsql-client
+                g.db = TursoHTTPClient(
+                    url=config['TURSO_DATABASE_URL'],
+                    auth_token=config['TURSO_AUTH_TOKEN']
+                )
             else:
                 # Development: Use SQLite
                 g.db = sqlite3.connect(config['DATABASE_URL'])
@@ -40,54 +28,90 @@ def get_db():
 
     return g.db
 
-class SyncLibSQLWrapper:
-    """Synchronous wrapper for libsql-client"""
+class TursoHTTPClient:
+    """HTTP client for Turso database"""
     def __init__(self, url, auth_token):
-        self.url = url
+        # Convert libsql URL to HTTP URL
+        self.base_url = url.replace('libsql://', 'https://').replace('.turso.io', '.turso.io')
+        if not self.base_url.endswith('/'):
+            self.base_url += '/'
+        self.base_url += 'v2/pipeline'
+        
         self.auth_token = auth_token
-        self._client = None
-        self._loop = None
-        self._thread = None
-        self._setup_async_client()
-    
-    def _setup_async_client(self):
-        """Setup async client in a separate thread"""
-        def run_async_loop():
-            import libsql_client
-            self._loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(self._loop)
-            
-            async def create_client():
-                return libsql_client.create_client(
-                    url=self.url,
-                    auth_token=self.auth_token
-                )
-            
-            self._client = self._loop.run_until_complete(create_client())
-            
-        self._thread = threading.Thread(target=run_async_loop)
-        self._thread.start()
-        self._thread.join()
+        self.session = requests.Session()
+        self.session.headers.update({
+            'Authorization': f'Bearer {auth_token}',
+            'Content-Type': 'application/json'
+        })
     
     def execute(self, query, params=None):
-        """Execute query synchronously"""
-        def run_query():
-            async def async_execute():
-                if params:
-                    return await self._client.execute(query, params)
-                else:
-                    return await self._client.execute(query)
+        """Execute query via HTTP"""
+        try:
+            # Format the request
+            request_data = {
+                "requests": [
+                    {
+                        "type": "execute",
+                        "stmt": {
+                            "sql": query
+                        }
+                    }
+                ]
+            }
             
-            return self._loop.run_until_complete(async_execute())
-        
-        return run_query()
+            # Add parameters if provided
+            if params:
+                request_data["requests"][0]["stmt"]["args"] = list(params)
+            
+            # Make the request
+            response = self.session.post(self.base_url, json=request_data, timeout=10)
+            response.raise_for_status()
+            
+            result_data = response.json()
+            
+            # Return a result object that mimics libsql-client behavior
+            return TursoResult(result_data)
+            
+        except Exception as e:
+            current_app.logger.exception(f"Error executing Turso query: {e}")
+            raise
     
     def close(self):
-        """Close the connection"""
-        if self._loop and not self._loop.is_closed():
-            self._loop.close()
-        if self._thread and self._thread.is_alive():
-            self._thread.join(timeout=1.0)
+        """Close the session"""
+        self.session.close()
+
+class TursoResult:
+    """Result wrapper for Turso HTTP responses"""
+    def __init__(self, result_data):
+        self.result_data = result_data
+        self._rows = None
+    
+    @property
+    def rows(self):
+        """Get rows from the result"""
+        if self._rows is None:
+            self._rows = []
+            
+            if (self.result_data and 
+                'results' in self.result_data and 
+                len(self.result_data['results']) > 0):
+                
+                result = self.result_data['results'][0]
+                if 'response' in result and 'result' in result['response']:
+                    result_obj = result['response']['result']
+                    
+                    if 'rows' in result_obj and 'cols' in result_obj:
+                        cols = result_obj['cols']
+                        for row_data in result_obj['rows']:
+                            row_dict = {}
+                            for i, col in enumerate(cols):
+                                if i < len(row_data):
+                                    row_dict[col] = row_data[i]
+                                else:
+                                    row_dict[col] = None
+                            self._rows.append(row_dict)
+        
+        return self._rows
 
 def close_db(error):
     """Close database connection"""
@@ -106,11 +130,8 @@ def execute_query(query, params=None, fetch=None):
 
     try:
         if config.get('IS_PRODUCTION'):
-            # Turso/libsql
-            if params:
-                result = db.execute(query, params)
-            else:
-                result = db.execute(query)
+            # Turso HTTP client
+            result = db.execute(query, params)
 
             if fetch == 'all':
                 return result.rows
