@@ -126,7 +126,7 @@ def debug_info():
     <h2>Blueprint Path Configuration</h2>
     <p>Current Working Directory: <code>{os.getcwd()}</code></p>
     <p>Blueprint's root_path: <code>{blueprint_path}</code></p>
-    <p>Blueprint's configured static_folder (relative): <code>{blueprint.static_folder_url_path}</code></p>
+    <p>Blueprint's configured static_folder (relative): <code>{blueprint.static_url_path}</code></p>
     <p><b>Absolute path Flask calculated for static_folder:</b></p>
     <pre><code>{absolute_static_path}</code></pre>
     
