@@ -55,7 +55,7 @@ class TursoHTTPClient:
         try:
             # Format the request for Turso's HTTP API
             request_data = {
-                "sql": query
+                "stmt": query
             }
             
             # Add parameters if provided
