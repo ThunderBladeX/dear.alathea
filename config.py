@@ -19,8 +19,8 @@ class Config:
     BLOB_READ_WRITE_TOKEN = os.environ.get('BLOB_READ_WRITE_TOKEN')
 
     # Admin settings
-    ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME')
-    ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD')
+    ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME', 'admin')
+    ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'admin123')
 
     # Cache settings
     CACHE_FOLDER = 'static/cache'
