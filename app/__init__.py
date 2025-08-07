@@ -7,7 +7,7 @@ def create_app():
     app.config.from_object(Config)
     app.config['CACHE_FOLDER'] = '/tmp/cache'
     
-    # Ensure directory exist
+    # Ensure directory exists
     os.makedirs(app.config['CACHE_FOLDER'], exist_ok=True)
 
     # Only create local directories in development
@@ -18,7 +18,7 @@ def create_app():
         os.makedirs('static/uploads/blog', exist_ok=True)
     
     # Initialize database
-    from app.database import init_db
+    from app.database import init_db, close_db
     with app.app_context():
         init_db(app.config)
     
@@ -40,19 +40,30 @@ def create_app():
     app.register_blueprint(api_bp)
     
     # Register request handlers
-    from app.database import get_db, close_db
     app.teardown_appcontext(close_db)
 
-    # Optimized URLs
-    from app.services.storage_service import optimize_image_url, get_file_url
+    # Template globals for optimized URLs
+    try:
+        from app.services.storage_service import optimize_image_url, get_file_url
 
-    @app.template_global()
-    def get_optimized_url(stored_path, size='medium', quality=85):
-        return optimize_image_url(stored_path, size, quality)
+        @app.template_global()
+        def get_optimized_url(stored_path, size='medium', quality=85):
+            return optimize_image_url(stored_path, size, quality)
 
-    @app.template_global()
-    def get_file_url_global(stored_path):
-        return get_file_url(stored_path)
+        @app.template_global()
+        def get_file_url_global(stored_path):
+            return get_file_url(stored_path)
+    except ImportError as e:
+        app.logger.warning(f"Storage service not available: {e}")
+        
+        # Provide fallback functions
+        @app.template_global()
+        def get_optimized_url(stored_path, size='medium', quality=85):
+            return f"/static/uploads/{stored_path}"
+
+        @app.template_global()
+        def get_file_url_global(stored_path):
+            return f"/static/uploads/{stored_path}"
     
     # Register error handlers
     @app.errorhandler(500)
