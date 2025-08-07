@@ -4,7 +4,7 @@
       "src": "run.py",
       "use": "@vercel/python",
       "config": {
-        "wsgi": "app" // This tells Vercel to look for the 'app' variable in 'run.py'
+        "wsgi": "app"
       }
     }
   ],
