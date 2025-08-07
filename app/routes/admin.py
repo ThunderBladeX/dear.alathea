@@ -5,6 +5,7 @@ from app.database import execute_query
 from app.services.admin_service import handle_file_upload, get_admin_stats
 import os
 import uuid
+from PIL import Image
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -13,7 +14,7 @@ admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 def upload():
     if request.method == 'POST':
         upload_type = request.form['type']
-        
+
         upload_handlers = {
             'gallery': handle_gallery_upload,
             'oc': handle_oc_upload,
@@ -27,6 +28,7 @@ def upload():
                 handler(request)
                 flash(f'{upload_type.capitalize()} uploaded successfully!')
             except Exception as e:
+                current_app.logger.exception(f"Upload failed: {str(e)}")
                 flash(f'Upload failed: {str(e)}')
         else:
             flash('Invalid upload type')
@@ -40,17 +42,17 @@ def handle_gallery_upload(request):
     title = request.form['title']
     caption = request.form.get('caption', '')
     tags = request.form.get('tags', '')
-    
+
     if not file or not file.filename:
         raise ValueError("No file provided")
-    
+
     filename = handle_file_upload(file, 'gallery')
-    
+
     # Get image dimensions
     width, height = get_image_dimensions(
         os.path.join(current_app.config['UPLOAD_FOLDER'], 'gallery', filename)
     )
-    
+
     execute_query('''
         INSERT INTO gallery_images (filename, title, caption, tags, width, height)
         VALUES (?, ?, ?, ?, ?, ?)
@@ -63,19 +65,19 @@ def handle_oc_upload(request):
     personality = request.form.get('personality', '')
     description = request.form.get('description', '')
     backstory = request.form.get('backstory', '')
-    
+
     base_image_filename = None
     profile_image_filename = None
-    
+
     if 'base_image' in request.files and request.files['base_image'].filename:
         base_image_filename = handle_file_upload(request.files['base_image'], 'ocs')
-    
+
     if 'profile_image' in request.files and request.files['profile_image'].filename:
         profile_image_filename = handle_file_upload(request.files['profile_image'], 'ocs')
-    
+
     if not base_image_filename:
         raise ValueError("Base image is required")
-    
+
     execute_query('''
         INSERT INTO ocs (name, base_image, profile_image, description, age, personality, backstory)
         VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -86,11 +88,11 @@ def handle_blog_upload(request):
     title = request.form['title']
     content = request.form['content']
     summary = request.form.get('summary', '')
-    
+
     featured_image_filename = None
     if 'featured_image' in request.files and request.files['featured_image'].filename:
         featured_image_filename = handle_file_upload(request.files['featured_image'], 'blog')
-    
+
     execute_query('''
         INSERT INTO blog_posts (title, content, summary, featured_image)
         VALUES (?, ?, ?, ?)
@@ -102,22 +104,24 @@ def handle_clothing_upload(request):
     item_name = request.form['item_name']
     category = request.form['category']
     z_index = request.form.get('z_index', 1)
-    
+
     if 'clothing_file' not in request.files:
         raise ValueError("No clothing file provided")
-    
+
     filename = handle_file_upload(request.files['clothing_file'], 'ocs')
-    
+
     execute_query('''
         INSERT INTO oc_clothing (oc_id, item_name, filename, category, z_index)
         VALUES (?, ?, ?, ?, ?)
     ''', (oc_id, item_name, filename, category, z_index))
 
 def get_image_dimensions(filepath):
-    """Get image dimensions using PIL"""
+    """Get image dimensions using Pillow"""
     try:
-        from PIL import Image
-        with Image.open(filepath) as img:
-            return img.size
-    except:
+        img = Image.open(filepath)
+        width, height = img.size
+        img.close()
+        return width, height
+    except Exception as e:
+        current_app.logger.error(f"Error getting image dimensions: {e}")
         return None, None
