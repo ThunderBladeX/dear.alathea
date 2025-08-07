@@ -12,13 +12,15 @@ def create_app():
 
     # Only create local directories in development
     if not app.config.get('IS_PRODUCTION'):
-        try:
-            os.makedirs('static/uploads', exist_ok=True)
-            os.makedirs('static/uploads/gallery', exist_ok=True)
-            os.makedirs('static/uploads/ocs', exist_ok=True)
-            os.makedirs('static/uploads/blog', exist_ok=True)
-        except Exception as e:
-            app.logger.warning(f"Could not create upload directories: {e}")
+    try:
+        # This is much safer as it uses the absolute path to the static folder
+        base_static_path = app.static_folder 
+        os.makedirs(os.path.join(base_static_path, 'uploads'), exist_ok=True)
+        os.makedirs(os.path.join(base_static_path, 'uploads', 'gallery'), exist_ok=True)
+        os.makedirs(os.path.join(base_static_path, 'uploads', 'ocs'), exist_ok=True)
+        os.makedirs(os.path.join(base_static_path, 'uploads', 'blog'), exist_ok=True)
+    except Exception as e:
+        app.logger.warning(f"Could not create upload directories: {e}")
     
     # Initialize database with error handling
     try:
