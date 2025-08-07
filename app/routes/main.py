@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, session, current_app, Markup
+from flask import Blueprint, render_template, session, current_app
+from jinja2 import Markup
 from app.database import execute_query
 
 main_bp = Blueprint(
