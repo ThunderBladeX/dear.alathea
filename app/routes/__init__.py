@@ -41,6 +41,17 @@ def create_app():
     # Register request handlers
     from app.database import get_db, close_db
     app.teardown_appcontext(close_db)
+
+    # Optimized URLs
+    from app.services.storage_service import optimize_image_url, get_file_url
+
+    @app.template_global()
+    def get_optimized_url(stored_path, size='medium', quality=85):
+        return optimize_image_url(stored_path, size, quality)
+
+    @app.template_global()
+    def get_file_url_global(stored_path):
+        return get_file_url(stored_path)
     
     # Register error handlers
     @app.errorhandler(500)
