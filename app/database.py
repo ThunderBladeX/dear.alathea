@@ -30,7 +30,7 @@ def get_db():
 
 class TursoHTTPClient:
     """HTTP client for Turso database"""
-     def __init__(self, url, auth_token):
+    def __init__(self, url, auth_token):
         # Extract database name from libsql URL
         if url.startswith('libsql://'):
             db_host = url.replace('libsql://', '')
