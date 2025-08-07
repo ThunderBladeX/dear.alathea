@@ -160,7 +160,15 @@ def init_db(config):
             FOREIGN KEY (user_id) REFERENCES users (id)
         )'''
     ]
-    
-    # Create admin user if needed
-    from app.auth import create_admin_user
-    create_admin_user(config)
+
+    try:
+        # Execute all table creation queries
+        for table_sql in tables:
+            execute_query(table_sql)
+
+        # Create admin user if needed
+        from app.auth import create_admin_user
+        create_admin_user(config)
+
+    except Exception as e:
+        current_app.logger.exception(f"Error initializing database: {e}")
