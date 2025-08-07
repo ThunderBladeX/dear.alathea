@@ -5,15 +5,17 @@ from config import Config
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
-    app.config['UPLOAD_FOLDER'] = '/tmp/uploads'
     app.config['CACHE_FOLDER'] = '/tmp/cache'
     
-    # Ensure directories exist
-    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+    # Ensure directory exist
     os.makedirs(app.config['CACHE_FOLDER'], exist_ok=True)
-    os.makedirs('static/uploads/gallery', exist_ok=True)
-    os.makedirs('static/uploads/ocs', exist_ok=True)
-    os.makedirs('static/uploads/blog', exist_ok=True)
+
+    # Only create local directories in development
+    if not app.config.get('IS_PRODUCTION'):
+        os.makedirs('static/uploads', exist_ok=True)
+        os.makedirs('static/uploads/gallery', exist_ok=True)
+        os.makedirs('static/uploads/ocs', exist_ok=True)
+        os.makedirs('static/uploads/blog', exist_ok=True)
     
     # Initialize database
     from app.database import init_db
