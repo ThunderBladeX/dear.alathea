@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, session, current_app
 from markupsafe import Markup
 from app.database import execute_query
+import os
 
 main_bp = Blueprint(
     'main',
