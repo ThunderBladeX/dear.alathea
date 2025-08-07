@@ -13,7 +13,6 @@ def create_app():
     # Only create local directories in development
     if not app.config.get('IS_PRODUCTION'):
         try:
-            # This is much safer as it uses the absolute path to the static folder
             base_static_path = app.static_folder 
             os.makedirs(os.path.join(base_static_path, 'uploads'), exist_ok=True)
             os.makedirs(os.path.join(base_static_path, 'uploads', 'gallery'), exist_ok=True)
@@ -30,7 +29,6 @@ def create_app():
         app.logger.info("Database initialized successfully")
     except Exception as e:
         app.logger.exception(f"Error initializing database: {e}")
-        # Continue anyway - we'll handle database errors in routes
     
     # Register blueprints with error handling
     try:
