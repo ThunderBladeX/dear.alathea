@@ -1,9 +1,12 @@
+from whitenoise import WhiteNoise
 from flask import Flask, g, render_template
 import os
 from config import Config
 
 def create_app():
     app = Flask(__name__)
+    app.wsgi_app = WhiteNoise(app.wsgi_app, root='app/static/', prefix='static/')
+
     app.config.from_object(Config)
     app.config['CACHE_FOLDER'] = '/tmp/cache'
     
