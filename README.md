@@ -158,3 +158,7 @@ The app falls back to serving original images if optimization fails.
 
 **Vercel deployment issues:**
 Check that `run.py` is the entry point and all environment variables are set.
+
+---
+
+**Happy character creating!** 🎨✨
