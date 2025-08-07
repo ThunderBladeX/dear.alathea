@@ -59,6 +59,9 @@ class TursoHTTPClient:
                 for param in params:
                     if param is None:
                         args.append({"type": "null", "value": None})
+                    elif isinstance(param, bool):
+                        # Convert boolean to integer (True=1, False=0)
+                        args.append({"type": "integer", "value": str(int(param))})
                     elif isinstance(param, int):
                         args.append({"type": "integer", "value": str(param)})
                     elif isinstance(param, float):
