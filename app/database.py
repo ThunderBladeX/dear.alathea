@@ -37,11 +37,11 @@ class TursoHTTPClient:
             # Remove any trailing path or query parameters
             db_host = db_host.split('?')[0].split('/')[0]
             
-            # Construct the correct HTTP API URL
-            self.base_url = f'https://{db_host}/v1/execute'
+            # Construct the correct HTTP API URL - using v2/pipeline endpoint
+            self.base_url = f'https://{db_host}/v2/pipeline'
         else:
-            # If it's already an HTTP URL, use it directly
-            self.base_url = url.rstrip('/') + '/v1/execute'
+            # If it's already an HTTP URL, use it directly with v2/pipeline
+            self.base_url = url.rstrip('/') + '/v2/pipeline'
         
         self.auth_token = auth_token
         self.session = requests.Session()
@@ -51,16 +51,41 @@ class TursoHTTPClient:
         })
     
     def execute(self, query, params=None):
-        """Execute query via HTTP"""
+        """Execute query via HTTP using Turso's v2/pipeline API"""
         try:
-            # Format the request for Turso's HTTP API
+            # Format parameters for Turso API
+            args = []
+            if params:
+                for param in params:
+                    if param is None:
+                        args.append({"type": "null", "value": None})
+                    elif isinstance(param, int):
+                        args.append({"type": "integer", "value": str(param)})
+                    elif isinstance(param, float):
+                        args.append({"type": "float", "value": str(param)})
+                    elif isinstance(param, str):
+                        args.append({"type": "text", "value": param})
+                    else:
+                        args.append({"type": "text", "value": str(param)})
+            
+            # Format the request for Turso's v2/pipeline API
             request_data = {
-                "stmt": query  # FIXED: Changed from "sql" to "stmt"
+                "requests": [
+                    {
+                        "type": "execute",
+                        "stmt": {
+                            "sql": query
+                        }
+                    },
+                    {
+                        "type": "close"
+                    }
+                ]
             }
             
             # Add parameters if provided
-            if params:
-                request_data["args"] = list(params)
+            if args:
+                request_data["requests"][0]["stmt"]["args"] = args
             
             # Make the request
             response = self.session.post(self.base_url, json=request_data, timeout=10)
@@ -101,24 +126,33 @@ class TursoResult:
         if self._rows is None:
             self._rows = []
             
-            # Handle Turso's actual HTTP API response format
+            # Handle Turso's v2/pipeline API response format
             if self.result_data and 'results' in self.result_data:
                 results = self.result_data['results']
-                if results and len(results) > 0:
-                    result = results[0]  # Get first result object
-                    
-                    # Get column names and rows from the result object
-                    columns = result.get('columns', [])
-                    rows = result.get('rows', [])
-                    
-                    # Process each row
-                    for row_data in rows:
-                        if isinstance(row_data, list):
-                            row_dict = {}
-                            for i, value in enumerate(row_data):
-                                column_name = columns[i] if i < len(columns) else f'col_{i}'
-                                row_dict[column_name] = value
-                            self._rows.append(row_dict)
+                # Look for the execute result (not the close result)
+                for result in results:
+                    if result.get('type') == 'ok' and 'response' in result:
+                        response = result['response']
+                        if 'result' in response:
+                            result_obj = response['result']
+                            
+                            # Get column names and rows
+                            columns = result_obj.get('cols', [])
+                            rows = result_obj.get('rows', [])
+                            
+                            # Process each row
+                            for row_data in rows:
+                                if isinstance(row_data, list):
+                                    row_dict = {}
+                                    for i, cell in enumerate(row_data):
+                                        column_name = columns[i]['name'] if i < len(columns) else f'col_{i}'
+                                        # Extract value from cell object
+                                        if isinstance(cell, dict) and 'value' in cell:
+                                            row_dict[column_name] = cell['value']
+                                        else:
+                                            row_dict[column_name] = cell
+                                    self._rows.append(row_dict)
+                            break  # Found our execute result
         
         return self._rows
 
