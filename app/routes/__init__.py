@@ -19,7 +19,8 @@ def create_app():
     
     # Initialize database
     from app.database import init_db
-    init_db(app.config)
+    with app.app_context():
+        init_db(app.config)
     
     # Register blueprints
     from app.routes.main import main_bp
