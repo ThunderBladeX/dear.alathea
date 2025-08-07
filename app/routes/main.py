@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session, current_app
+from flask import Blueprint, render_template, session, current_app, Markup
 from app.database import execute_query
 
 main_bp = Blueprint(
@@ -92,3 +92,54 @@ def commissions():
     except Exception as e:
         current_app.logger.exception(f"Error in commissions route: {e}")
         return f"<h1>Error</h1><p>Something went wrong: {str(e)}</p><p><a href='/'>Go home</a></p>", 500
+
+@main_bp.route('/debug-info')
+def debug_info():
+    # Get the 'main' blueprint object
+    blueprint = current_app.blueprints.get('main')
+    
+    # Check if the blueprint and its static folder exist
+    if not blueprint:
+        return "<h1>Error: 'main' blueprint not found!</h1>"
+
+    # Get the absolute path to the blueprint's static folder
+    absolute_static_path = blueprint.static_folder
+    # Get the path of the blueprint file itself
+    blueprint_path = blueprint.root_path
+    # The full path to the CSS file
+    css_file_path = os.path.join(absolute_static_path, 'style.css')
+    # Check if the file actually exists at that location
+    file_exists = os.path.exists(css_file_path)
+
+    # Show all registered URL rules in the app
+    all_rules = [str(rule) for rule in current_app.url_map.iter_rules()]
+    # Filter for just the static rules
+    static_rules = [str(rule) for rule in current_app.url_map.iter_rules('static')]
+    main_static_rules = [str(rule) for rule in current_app.url_map.iter_rules('main.static')]
+
+    # Build the HTML output
+    html = f"""
+    <h1>Flask Debug Information</h1>
+    
+    <h2>Blueprint Path Configuration</h2>
+    <p>Current Working Directory: <code>{os.getcwd()}</code></p>
+    <p>Blueprint's root_path: <code>{blueprint_path}</code></p>
+    <p>Blueprint's configured static_folder (relative): <code>{blueprint.static_folder_url_path}</code></p>
+    <p><b>Absolute path Flask calculated for static_folder:</b></p>
+    <pre><code>{absolute_static_path}</code></pre>
+    
+    <h2>File Existence Check</h2>
+    <p><b>Full path being checked for style.css:</b></p>
+    <pre><code>{css_file_path}</code></pre>
+    <p><b>Does the file exist at this path?</b> <span style="font-weight: bold; color: {'green' if file_exists else 'red'};">{file_exists}</span></p>
+
+    <h2>URL Routing Rules</h2>
+    <h3>'main.static' Rules:</h3>
+    <pre>{Markup('<br>').join(main_static_rules) or 'None Found'}</pre>
+    <h3>App-level 'static' Rules:</h3>
+    <pre>{Markup('<br>').join(static_rules) or 'None Found'}</pre>
+    <h3>All Rules:</h3>
+    <pre>{Markup('<br>').join(all_rules)}</pre>
+    """
+    
+    return html
