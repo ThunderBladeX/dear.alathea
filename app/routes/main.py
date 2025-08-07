@@ -1,7 +1,13 @@
 from flask import Blueprint, render_template, session, current_app
 from app.database import execute_query
 
-main_bp = Blueprint('main', __name__)
+main_bp = Blueprint(
+    'main',
+    __name__,
+      # Go up one level from 'routes' to 'app' then into 'templates' or 'static'
+    template_folder='../templates',
+    static_folder='../static'
+)
 
 @main_bp.route('/')
 def index():
