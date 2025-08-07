@@ -6,6 +6,7 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
     app.config['UPLOAD_FOLDER'] = '/tmp/uploads'
+    app.config['CACHE_FOLDER'] = '/tmp/cache'
     
     # Ensure directories exist
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
