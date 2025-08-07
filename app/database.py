@@ -1,6 +1,7 @@
 from flask import g, current_app
-import libsql_client
 import sqlite3
+import asyncio
+import threading
 
 def get_db():
     """Get database connection for current request"""
@@ -9,20 +10,84 @@ def get_db():
 
         try:
             if config.get('IS_PRODUCTION'):
-                # Production: Use libsql for Turso
-                g.db = libsql_client.create_client(
-                    url=config['TURSO_DATABASE_URL'],
-                    auth_token=config['TURSO_AUTH_TOKEN']
-                )
+                # Production: Use libsql for Turso with proper async handling
+                import libsql_client
+                
+                # Check if we're in an async context
+                try:
+                    loop = asyncio.get_running_loop()
+                    # If we get here, we're in an async context
+                    g.db = libsql_client.create_client(
+                        url=config['TURSO_DATABASE_URL'],
+                        auth_token=config['TURSO_AUTH_TOKEN']
+                    )
+                except RuntimeError:
+                    # No running event loop, create a sync wrapper
+                    g.db = SyncLibSQLWrapper(
+                        url=config['TURSO_DATABASE_URL'],
+                        auth_token=config['TURSO_AUTH_TOKEN']
+                    )
             else:
                 # Development: Use SQLite
                 g.db = sqlite3.connect(config['DATABASE_URL'])
                 g.db.row_factory = sqlite3.Row
         except Exception as e:
             current_app.logger.exception(f"Error connecting to database: {e}")
-            raise
+            # Fallback to SQLite if Turso connection fails
+            current_app.logger.warning("Falling back to SQLite database")
+            g.db = sqlite3.connect('fallback.db')
+            g.db.row_factory = sqlite3.Row
 
     return g.db
+
+class SyncLibSQLWrapper:
+    """Synchronous wrapper for libsql-client"""
+    def __init__(self, url, auth_token):
+        self.url = url
+        self.auth_token = auth_token
+        self._client = None
+        self._loop = None
+        self._thread = None
+        self._setup_async_client()
+    
+    def _setup_async_client(self):
+        """Setup async client in a separate thread"""
+        def run_async_loop():
+            import libsql_client
+            self._loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(self._loop)
+            
+            async def create_client():
+                return libsql_client.create_client(
+                    url=self.url,
+                    auth_token=self.auth_token
+                )
+            
+            self._client = self._loop.run_until_complete(create_client())
+            
+        self._thread = threading.Thread(target=run_async_loop)
+        self._thread.start()
+        self._thread.join()
+    
+    def execute(self, query, params=None):
+        """Execute query synchronously"""
+        def run_query():
+            async def async_execute():
+                if params:
+                    return await self._client.execute(query, params)
+                else:
+                    return await self._client.execute(query)
+            
+            return self._loop.run_until_complete(async_execute())
+        
+        return run_query()
+    
+    def close(self):
+        """Close the connection"""
+        if self._loop and not self._loop.is_closed():
+            self._loop.close()
+        if self._thread and self._thread.is_alive():
+            self._thread.join(timeout=1.0)
 
 def close_db(error):
     """Close database connection"""
@@ -160,15 +225,16 @@ def init_db(config):
             FOREIGN KEY (user_id) REFERENCES users (id)
         )'''
     ]
-
+    
     try:
         # Execute all table creation queries
         for table_sql in tables:
             execute_query(table_sql)
-
+        
         # Create admin user if needed
         from app.auth import create_admin_user
         create_admin_user(config)
-
+        
     except Exception as e:
         current_app.logger.exception(f"Error initializing database: {e}")
+        raise
