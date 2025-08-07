@@ -14,14 +14,14 @@ class Config:
     if not TURSO_DATABASE_URL or not TURSO_AUTH_TOKEN:
         print("Warning: TURSO_DATABASE_URL or TURSO_AUTH_TOKEN not set.  Using SQLite fallback.")
 
+    # Upload settings
+    MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB
+    BLOB_READ_WRITE_TOKEN = os.environ.get('BLOB_READ_WRITE_TOKEN')
+
     # Admin settings
     ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME')
     ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD')
-    
-    # Upload settings
-    UPLOAD_FOLDER = 'static/uploads'
-    MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB
-    
+
     # Cache settings
     CACHE_FOLDER = 'static/cache'
     
@@ -36,3 +36,8 @@ class Config:
     def IS_PRODUCTION(self):
         """Check if running in production"""
         return self.TURSO_DATABASE_URL is not None and self.TURSO_AUTH_TOKEN is not None
+
+    @property
+    def USE_BLOB_STORAGE(self):
+        """Check if we should use Vercel Blob storage"""
+        return bool(self.BLOB_READ_WRITE_TOKEN)
