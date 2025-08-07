@@ -30,12 +30,18 @@ def get_db():
 
 class TursoHTTPClient:
     """HTTP client for Turso database"""
-    def __init__(self, url, auth_token):
-        # Convert libsql URL to HTTP URL
-        self.base_url = url.replace('libsql://', 'https://').replace('.turso.io', '.turso.io')
-        if not self.base_url.endswith('/'):
-            self.base_url += '/'
-        self.base_url += 'v2/pipeline'
+     def __init__(self, url, auth_token):
+        # Extract database name from libsql URL
+        if url.startswith('libsql://'):
+            db_host = url.replace('libsql://', '')
+            # Remove any trailing path or query parameters
+            db_host = db_host.split('?')[0].split('/')[0]
+            
+            # Construct the correct HTTP API URL
+            self.base_url = f'https://{db_host}/v1/execute'
+        else:
+            # If it's already an HTTP URL, use it directly
+            self.base_url = url.rstrip('/') + '/v1/execute'
         
         self.auth_token = auth_token
         self.session = requests.Session()
@@ -47,24 +53,22 @@ class TursoHTTPClient:
     def execute(self, query, params=None):
         """Execute query via HTTP"""
         try:
-            # Format the request
+            # Format the request for Turso's HTTP API
             request_data = {
-                "requests": [
-                    {
-                        "type": "execute",
-                        "stmt": {
-                            "sql": query
-                        }
-                    }
-                ]
+                "sql": query
             }
             
             # Add parameters if provided
             if params:
-                request_data["requests"][0]["stmt"]["args"] = list(params)
+                request_data["args"] = list(params)
             
             # Make the request
             response = self.session.post(self.base_url, json=request_data, timeout=10)
+            
+            # Log the response for debugging
+            current_app.logger.debug(f"Turso response status: {response.status_code}")
+            current_app.logger.debug(f"Turso response: {response.text}")
+            
             response.raise_for_status()
             
             result_data = response.json()
@@ -72,6 +76,11 @@ class TursoHTTPClient:
             # Return a result object that mimics libsql-client behavior
             return TursoResult(result_data)
             
+        except requests.exceptions.RequestException as e:
+            current_app.logger.error(f"HTTP error executing Turso query: {e}")
+            if hasattr(e, 'response') and e.response is not None:
+                current_app.logger.error(f"Response content: {e.response.text}")
+            raise
         except Exception as e:
             current_app.logger.exception(f"Error executing Turso query: {e}")
             raise
@@ -92,24 +101,36 @@ class TursoResult:
         if self._rows is None:
             self._rows = []
             
-            if (self.result_data and 
-                'results' in self.result_data and 
-                len(self.result_data['results']) > 0):
-                
-                result = self.result_data['results'][0]
-                if 'response' in result and 'result' in result['response']:
-                    result_obj = result['response']['result']
+            # Handle Turso's HTTP API response format
+            if self.result_data and 'results' in self.result_data:
+                results = self.result_data['results']
+                if results and len(results) > 0:
+                    # Get column names
+                    columns = self.result_data.get('columns', [])
                     
-                    if 'rows' in result_obj and 'cols' in result_obj:
-                        cols = result_obj['cols']
-                        for row_data in result_obj['rows']:
+                    # Process each row
+                    for row_data in results:
+                        if isinstance(row_data, list):
                             row_dict = {}
-                            for i, col in enumerate(cols):
-                                if i < len(row_data):
-                                    row_dict[col] = row_data[i]
-                                else:
-                                    row_dict[col] = None
+                            for i, value in enumerate(row_data):
+                                column_name = columns[i] if i < len(columns) else f'col_{i}'
+                                row_dict[column_name] = value
                             self._rows.append(row_dict)
+                        elif isinstance(row_data, dict):
+                            self._rows.append(row_data)
+            
+            # Alternative format handling
+            elif self.result_data and 'rows' in self.result_data:
+                columns = self.result_data.get('columns', [])
+                for row_data in self.result_data['rows']:
+                    if isinstance(row_data, list):
+                        row_dict = {}
+                        for i, value in enumerate(row_data):
+                            column_name = columns[i] if i < len(columns) else f'col_{i}'
+                            row_dict[column_name] = value
+                        self._rows.append(row_dict)
+                    else:
+                        self._rows.append(row_data)
         
         return self._rows
 
