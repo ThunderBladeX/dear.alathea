@@ -37,18 +37,18 @@
             </a>
             {% endif %}
             
-            <a href="{{ url_for('commissions') }}" class="nav-link">
+            <a href="{{ url_for('main.commissions') }}" class="nav-link">
                 <span class="nav-icon">💖</span>
                 <span>Commissions</span>
             </a>
             
             {% if not session.user_id %}
-            <a href="{{ url_for('login') }}" class="nav-link">
+            <a href="{{ url_for('auth.login') }}" class="nav-link">
                 <span class="nav-icon">🌸</span>
                 <span>Login</span>
             </a>
             {% else %}
-            <a href="{{ url_for('logout') }}" class="nav-link">
+            <a href="{{ url_for('auth.logout') }}" class="nav-link">
                 <span class="nav-icon">🌿</span>
                 <span>Logout</span>
             </a>
@@ -64,9 +64,9 @@
     <div class="main-content">
         <!-- Top Navigation -->
         <nav class="top-nav">
-            <a href="{{ url_for('gallery') }}" class="nav-tab" data-section="gallery">Gallery</a>
-            <a href="{{ url_for('ocs') }}" class="nav-tab" data-section="ocs">OCs</a>
-            <a href="{{ url_for('blog') }}" class="nav-tab" data-section="blog">Blog</a>
+            <a href="#" class="nav-tab active" data-section="gallery">Gallery</a>
+            <a href="#" class="nav-tab" data-section="ocs">OCs</a>
+            <a href="#" class="nav-tab" data-section="blog">Blog</a>
         </nav>
 
         <!-- Content Sections -->
@@ -81,8 +81,8 @@
                              data-title="{{ image.title }}" 
                              data-caption="{{ image.caption or '' }}"
                              data-date="{{ image.created_at }}"
-                             onclick="window.location.href='{{ url_for('gallery_image', image_id=image.id) }}'">
-                            <img src="{{ url_for('static', filename='uploads/gallery/' + image.filename) }}" 
+                             onclick="window.location.href='{{ url_for('gallery.image_detail', image_id=image.id) }}'">
+                            <img src="{{ get_optimized_url(image.filename, 'medium') }}" 
                                  alt="{{ image.title }}" class="gallery-img">
                         </div>
                         {% endfor %}
@@ -94,11 +94,15 @@
                     <h3 class="section-title">🌻 My Characters 🌻</h3>
                     <div class="ocs-grid">
                         {% for oc in ocs %}
-                        <div class="oc-folder" onclick="window.location.href='{{ url_for('oc_detail', oc_id=oc.id) }}'">
+                        <div class="oc-folder" onclick="window.location.href='{{ url_for('ocs.detail', oc_id=oc.id) }}'">
                             <div class="folder-tab">{{ oc.name }}</div>
                             <div class="folder-content">
-                                <img src="{{ url_for('static', filename='uploads/ocs/' + oc.profile_image) }}" 
+                                {% if oc.profile_image %}
+                                <img src="{{ get_optimized_url(oc.profile_image, 'small') }}" 
                                      alt="{{ oc.name }}" class="oc-preview">
+                                {% else %}
+                                <div class="no-image">No Image</div>
+                                {% endif %}
                             </div>
                         </div>
                         {% endfor %}
@@ -110,7 +114,7 @@
                     <h3 class="section-title">📝 Recent Thoughts 📝</h3>
                     <div class="blog-posts">
                         {% for post in blog_posts %}
-                        <article class="blog-preview" onclick="window.location.href='{{ url_for('blog_post', post_id=post.id) }}'">
+                        <article class="blog-preview" onclick="window.location.href='{{ url_for('blog.post_detail', post_id=post.id) }}'">
                             <h4 class="post-title">{{ post.title }}</h4>
                             <p class="post-summary">{{ post.summary or post.content[:150] + '...' if post.content|length > 150 else post.content }}</p>
                             <time class="post-date">{{ post.created_at }}</time>
