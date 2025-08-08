@@ -1,6 +1,6 @@
 # dear.alathea
 
-A production-ready personal art site with character sheets, commission calculator, and blog. Built with Flask, optimized for performance, and designed to scale.
+A personal art site with character sheets, commission calculator, and blog. Built with Flask, optimized for performance, and designed to scale.
 
 ## What it does
 
