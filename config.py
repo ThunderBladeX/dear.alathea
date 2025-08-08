@@ -21,9 +21,6 @@ class Config:
     # Admin settings
     ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME', 'admin')
     ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'admin123')
-
-    # Cache settings
-    CACHE_FOLDER = 'static/cache'
     
     @property
     def DATABASE_URL(self):
