@@ -11,6 +11,12 @@ auth_bp = Blueprint(
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
+    from flask import current_app
+    import os
+    template_path = os.path.join(current_app.template_folder, 'login.html')
+    print(f"Looking for template at: {template_path}")
+    print(f"Template exists: {os.path.exists(template_path)}")
+
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
