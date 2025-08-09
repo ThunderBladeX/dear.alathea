@@ -1,6 +1,7 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash, current_app
 from app.auth import authenticate_user, create_user
 from app.database import execute_query
+import os
 
 auth_bp = Blueprint(
     'auth',
@@ -11,8 +12,6 @@ auth_bp = Blueprint(
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
-    from flask import current_app
-    import os
     template_path = os.path.join(current_app.template_folder, 'login.html')
     print(f"Looking for template at: {template_path}")
     print(f"Template exists: {os.path.exists(template_path)}")
@@ -25,8 +24,7 @@ def login():
         if user:
             session['user_id'] = user['id']
             session['username'] = user['username']
-            
-            # Update IP address
+
             ip_address = request.environ.get('HTTP_X_FORWARDED_FOR', request.environ.get('REMOTE_ADDR'))
             execute_query(
                 'UPDATE users SET ip_address = ? WHERE id = ?', 
@@ -66,9 +64,6 @@ def logout():
 
 @auth_bp.route('/debug-templates')
 def debug_templates():
-    from flask import current_app
-    import os
-    
     info = []
     info.append(f"App root path: {current_app.root_path}")
     info.append(f"Template folder: {current_app.template_folder}")
