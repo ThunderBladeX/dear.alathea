@@ -63,3 +63,24 @@ def register():
 def logout():
     session.clear()
     return redirect(url_for('main.index'))
+
+@auth_bp.route('/debug-templates')
+def debug_templates():
+    from flask import current_app
+    import os
+    
+    info = []
+    info.append(f"App root path: {current_app.root_path}")
+    info.append(f"Template folder: {current_app.template_folder}")
+    
+    template_dir = os.path.join(current_app.root_path, current_app.template_folder)
+    info.append(f"Full template path: {template_dir}")
+    info.append(f"Template dir exists: {os.path.exists(template_dir)}")
+    
+    if os.path.exists(template_dir):
+        info.append(f"Files in template dir: {os.listdir(template_dir)}")
+    
+    info.append(f"Looking for login.html at: {os.path.join(template_dir, 'login.html')}")
+    info.append(f"login.html exists: {os.path.exists(os.path.join(template_dir, 'login.html'))}")
+    
+    return "<br>".join(info)
