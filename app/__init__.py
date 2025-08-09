@@ -5,8 +5,16 @@ from config import Config
 
 def create_app():
     app = Flask(__name__)
-    print(f"Template folder: {app.template_folder}")
-    print(f"Full template path: {os.path.abspath(app.template_folder)}")
+
+    print(f"App template folder: {app.template_folder}")
+    print(f"App root path: {app.root_path}")
+    print(f"Full template path: {os.path.join(app.root_path, app.template_folder)}")
+
+    template_dir = os.path.join(app.root_path, app.template_folder)
+    if os.path.exists(template_dir):
+        print(f"Files in template directory: {os.listdir(template_dir)}")
+    else:
+        print(f"Template directory does not exist: {template_dir}")
 
     app.wsgi_app = WhiteNoise(app.wsgi_app, root='app/static/', prefix='static/')
 
