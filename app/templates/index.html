@@ -27,7 +27,7 @@
 
         <div class="navigation-links">
             {% if session.user_id %}
-            <a href="{{ url_for('notifications') }}" class="nav-link notifs-link">
+            <a href="{{ url_for('main.notifications') }}" class="nav-link notifs-link">
                 <span class="nav-icon">🔔</span>
                 <span>Notifications</span>
                 {% if notifications %}
