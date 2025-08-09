@@ -6,7 +6,6 @@ import os
 main_bp = Blueprint(
     'main',
     __name__,
-      # Go up one level from 'routes' to 'app' then into 'templates' or 'static'
     template_folder='../templates',
     static_folder='../static'
 )
@@ -15,15 +14,13 @@ main_bp = Blueprint(
 def index():
     try:
         current_app.logger.info("Starting index route")
-        
-        # Initialize empty data
+
         gallery_images = []
         blog_posts = []
         ocs = []
         notifications = []
         
         try:
-            # Get recent gallery images
             current_app.logger.info("Fetching gallery images")
             gallery_images = execute_query('''
                 SELECT * FROM gallery_images 
@@ -36,7 +33,6 @@ def index():
             gallery_images = []
         
         try:
-            # Get recent blog posts
             current_app.logger.info("Fetching blog posts")
             blog_posts = execute_query('''
                 SELECT * FROM blog_posts 
@@ -49,7 +45,6 @@ def index():
             blog_posts = []
         
         try:
-            # Get OCs
             current_app.logger.info("Fetching OCs")
             ocs = execute_query(
                 'SELECT * FROM ocs ORDER BY created_at DESC', 
@@ -61,7 +56,6 @@ def index():
             ocs = []
         
         try:
-            # Get notifications for logged in user
             if 'user_id' in session:
                 current_app.logger.info(f"Fetching notifications for user {session['user_id']}")
                 notifications = execute_query('''
@@ -83,7 +77,6 @@ def index():
     
     except Exception as e:
         current_app.logger.exception(f"Error in index route: {e}")
-        # Return a simple error page instead of crashing
         return f"<h1>Error</h1><p>Something went wrong: {str(e)}</p><p><a href='/'>Try again</a></p>", 500
 
 @main_bp.route('/commissions')
@@ -97,29 +90,20 @@ def commissions():
 
 @main_bp.route('/debug-info')
 def debug_info():
-    # Get the 'main' blueprint object
     blueprint = current_app.blueprints.get('main')
-    
-    # Check if the blueprint and its static folder exist
+
     if not blueprint:
         return "<h1>Error: 'main' blueprint not found!</h1>"
 
-    # Get the absolute path to the blueprint's static folder
     absolute_static_path = blueprint.static_folder
-    # Get the path of the blueprint file itself
     blueprint_path = blueprint.root_path
-    # The full path to the CSS file
     css_file_path = os.path.join(absolute_static_path, 'style.css')
-    # Check if the file actually exists at that location
     file_exists = os.path.exists(css_file_path)
 
-    # Show all registered URL rules in the app
     all_rules = [str(rule) for rule in current_app.url_map.iter_rules()]
-    # Filter for just the static rules
     static_rules = [str(rule) for rule in current_app.url_map.iter_rules('static')]
     main_static_rules = [str(rule) for rule in current_app.url_map.iter_rules('main.static')]
 
-    # Build the HTML output
     html = f"""
     <h1>Flask Debug Information</h1>
     
