@@ -4,7 +4,7 @@
 <div class="image-detail-page">
     <div class="image-header">
         <h1>{{ image.title }}</h1>
-        <a href="{{ url_for('gallery') }}" class="back-link">← Back to Gallery</a>
+        <a href="{{ url_for('gallery.gallery') }}" class="back-link">← Back to Gallery</a>
     </div>
 
     <div class="image-content">
@@ -46,7 +46,7 @@
         <h3>Comments</h3>
         
         {% if session.user_id %}
-        <form method="POST" action="{{ url_for('add_comment') }}" class="comment-form">
+        <form method="POST" action="{{ url_for('api.add_comment') }}" class="comment-form">
             <input type="hidden" name="content_type" value="gallery">
             <input type="hidden" name="content_id" value="{{ image.id }}">
             <textarea name="comment" placeholder="What do you think of this artwork?" required></textarea>
@@ -84,7 +84,7 @@
 
                 {% if session.user_id %}
                 <div class="reply-form" id="reply-{{ comment.id }}" style="display: none;">
-                    <form method="POST" action="{{ url_for('add_comment') }}">
+                    <form method="POST" action="{{ url_for('api.add_comment') }}">
                         <input type="hidden" name="content_type" value="gallery">
                         <input type="hidden" name="content_id" value="{{ image.id }}">
                         <input type="hidden" name="parent_id" value="{{ comment.id }}">
