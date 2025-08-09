@@ -2,7 +2,13 @@ from flask import Blueprint, render_template, redirect, url_for
 from app.database import execute_query
 from app.services.comment_service import get_comments_with_replies
 
-blog_bp = Blueprint('blog', __name__, url_prefix='/blog')
+blog_bp = Blueprint(
+    'blog',
+    __name__,
+    template_folder='../templates',
+    static_folder='../static',
+    url_prefix='/blog'
+)
 
 @blog_bp.route('/')
 def index():
