@@ -77,7 +77,9 @@
   --vintage-blue:#6B5B73;
   --coral-blush:#CC8B65;
   --gradient-sunset:linear-gradient(135deg, #D4A574 0%, #C17A74 50%, #B08B7A 100%);
-  --gradient-morning:linear-gradient(45deg, #FFF4E6 0%, #D4A574 100%)
+  --gradient-morning:linear-gradient(45deg, #FFF4E6 0%, #D4A574 100%);
+  --bg-card:rgba(139,69,19,0.9);
+  --text-light:#FFF4E6
 }
 .theme-spring{
   --cream-base:#F8FFF8;
@@ -88,7 +90,9 @@
   --vintage-blue:#87CEEB;
   --coral-blush:#FFB6C1;
   --gradient-sunset:linear-gradient(135deg, #FFE135 0%, #F8C8DC 50%, #DDA0DD 100%);
-  --gradient-morning:linear-gradient(45deg, #F8FFF8 0%, #FFE135 100%)
+  --gradient-morning:linear-gradient(45deg, #F8FFF8 0%, #FFE135 100%);
+  --bg-card:rgba(34,139,34,0.9);
+  --text-light:#F8FFF8
 }
 .theme-winter{
   --cream-base:#F0F8FF;
@@ -99,7 +103,9 @@
   --vintage-blue:#6495ED;
   --coral-blush:#DDA0DD;
   --gradient-sunset:linear-gradient(135deg, #E6E6FA 0%, #B6D7FF 50%, #C8C8FF 100%);
-  --gradient-morning:linear-gradient(45deg, #F0F8FF 0%, #E6E6FA 100%)
+  --gradient-morning:linear-gradient(45deg, #F0F8FF 0%, #E6E6FA 100%);
+  --bg-card:rgba(47,79,79,0.9);
+  --text-light:#F0F8FF
 }
 .tooltip::after,.tooltip::before{left:50%;transform:translateX(-50%)}
 .container,body{min-height:100vh}
