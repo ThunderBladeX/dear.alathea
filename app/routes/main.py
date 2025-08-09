@@ -88,6 +88,19 @@ def commissions():
         current_app.logger.exception(f"Error in commissions route: {e}")
         return f"<h1>Error</h1><p>Something went wrong: {str(e)}</p><p><a href='/'>Go home</a></p>", 500
 
+@main_bp.route('/notifications')
+def notifications_page():
+    if 'user_id' not in session:
+        return redirect(url_for('auth.login'))
+
+    notifications = execute_query('''
+        SELECT * FROM notifications
+        WHERE user_id = ?
+        ORDER BY created_at DESC
+    ''', (session['user_id'],), fetch='all') or []
+
+    return render_template('notifications.html', notifications=notifications)
+
 @main_bp.route('/debug-info')
 def debug_info():
     blueprint = current_app.blueprints.get('main')
