@@ -5,7 +5,13 @@ from app.services.comment_service import add_comment, vote_comment
 from app.services.image_service import optimize_image
 import os
 
-api_bp = Blueprint('api', __name__, url_prefix='/api')
+api_bp = Blueprint(
+    'api',
+    __name__,
+    template_folder='../templates',
+    static_folder='../static',
+    url_prefix='/api'
+)
 
 @api_bp.route('/add_comment', methods=['POST'])
 @login_required
