@@ -100,7 +100,7 @@
 .theme-toggle{border-radius:50%;background:var(--gradient-sunset);border:3px solid var(--border-soft);font-size:20px;box-shadow:var(--shadow-elevation-2)}
 .theme-toggle:hover{transform:scale(1.1) rotate(15deg)}
 .theme-options{position:absolute;bottom:60px;right:0;background:var(--bg-card);border:3px solid var(--border-soft);border-radius:var(--radius-card);padding:15px;box-shadow:var(--shadow-elevation-3);min-width:200px;transform:translateY(20px);transition:.3s}
-.character-img,.left-sidebar,.nav-link:hover,.profile-pic{box-shadow:var(--shadow-elevation-2)}
+.left-sidebar,.nav-link:hover,.profile-pic{box-shadow:var(--shadow-elevation-2)}
 .theme-switcher.open .theme-options{opacity:1;visibility:visible;transform:translateY(0)}
 .theme-option{display:block;width:100%;padding:10px 15px;margin-bottom:5px;background:var(--bg-overlay);border:2px solid transparent;border-radius:var(--radius-soft);cursor:pointer;transition:.3s;text-align:left}
 .search-clear,.search-container{display:flex;align-items:center}
