@@ -2,7 +2,6 @@
 
 {% block content %}
 <div class="main-layout">
-    <!-- Left Sidebar -->
     <div class="left-sidebar">
         <div class="profile-section">
             <div class="profile-image">
@@ -28,7 +27,7 @@
 
         <div class="navigation-links">
             {% if session.user_id %}
-            <a href="{{ url_for('main.notifications') }}" class="nav-link notifs-link">
+            <a href="{{ url_for('notifications') }}" class="nav-link notifs-link">
                 <span class="nav-icon">🔔</span>
                 <span>Notifications</span>
                 {% if notifications %}
@@ -60,9 +59,7 @@
         </div>
     </div>
 
-    <!-- Main Content Area -->
     <div class="main-content">
-        <!-- Top Navigation -->
         <nav class="top-nav">
             <a href="#" class="nav-tab active" data-section="gallery">Gallery</a>
             <a href="#" class="nav-tab" data-section="ocs">OCs</a>
