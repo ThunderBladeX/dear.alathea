@@ -146,7 +146,7 @@ body{background:var(--gradient-morning);background-attachment:fixed;line-height:
 .nav-icon{font-size:1.2rem;color:var(--sage-primary)}
 .notif-count{background:var(--coral-blush);color:var(--text-light);font-size:.8rem;padding:2px 8px;border-radius:10px;margin-left:auto}
 .character-art{margin-top:20px}
-.character-img{max-width:100%;height:auto;border-radius:var(--radius-soft);border:3px solid var(--golden-honey)}
+.character-img{max-width:100%;height:auto}
 .main-content{background:var(--bg-card);border:3px solid var(--border-soft);border-radius:var(--radius-card);overflow:hidden;box-shadow:var(--shadow-elevation-3)}
 .top-nav{display:flex;background:var(--gradient-sunset);border-bottom:3px solid var(--border-soft);padding:0}
 .nav-tab{flex:1;padding:20px;color:var(--text-primary);font-size:1.1rem;border-right:2px solid var(--border-soft);transition:.3s;background:rgba(255,255,255,.3)}
