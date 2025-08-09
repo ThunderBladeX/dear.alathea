@@ -4,7 +4,7 @@
 <div class="oc-detail-page" data-oc-id="{{ oc.id }}">
     <div class="oc-header">
         <h1 class="oc-name">{{ oc.name }}</h1>
-        <a href="{{ url_for('ocs') }}" class="back-link">← Back to Characters</a>
+        <a href="{{ url_for('ocs.ocs') }}" class="back-link">← Back to Characters</a>
     </div>
 
     <div class="oc-content">
@@ -91,12 +91,11 @@
         </div>
     </div>
 
-    <!-- Comments Section -->
     <div class="comments-section">
         <h3>💬 Comments</h3>
         
         {% if session.user_id %}
-        <form method="POST" action="{{ url_for('add_comment') }}" class="comment-form">
+        <form method="POST" action="{{ url_for('api.add_comment') }}" class="comment-form">
             <input type="hidden" name="content_type" value="oc">
             <input type="hidden" name="content_id" value="{{ oc.id }}">
             <textarea name="comment" placeholder="Share your thoughts..." required></textarea>
@@ -104,7 +103,7 @@
         </form>
         {% else %}
         <p class="login-prompt">
-            <a href="{{ url_for('login') }}">Login</a> to leave a comment!
+            <a href="{{ url_for('auth.login') }}">Login</a> to leave a comment!
         </p>
         {% endif %}
 
@@ -132,10 +131,9 @@
                     {% endif %}
                 </div>
 
-                <!-- Reply form -->
                 {% if session.user_id %}
                 <div class="reply-form" id="reply-{{ comment.id }}" style="display: none;">
-                    <form method="POST" action="{{ url_for('add_comment') }}">
+                    <form method="POST" action="{{ url_for('api.add_comment') }}">
                         <input type="hidden" name="content_type" value="oc">
                         <input type="hidden" name="content_id" value="{{ oc.id }}">
                         <input type="hidden" name="parent_id" value="{{ comment.id }}">
@@ -145,7 +143,6 @@
                 </div>
                 {% endif %}
 
-                <!-- Replies -->
                 {% if comment.replies %}
                 <div class="replies">
                     {% for reply in comment.replies %}
@@ -169,7 +166,6 @@
 </div>
 
 <script>
-// Set body data attribute for JavaScript
 document.body.dataset.ocId = "{{ oc.id }}";
 </script>
 {% endblock %}
