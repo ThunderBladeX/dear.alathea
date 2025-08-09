@@ -2,7 +2,12 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 from app.auth import authenticate_user, create_user
 from app.database import execute_query
 
-auth_bp = Blueprint('auth', __name__)
+auth_bp = Blueprint(
+    'auth',
+    __name__,
+    template_folder='../templates',
+    static_folder='../static'
+)
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
