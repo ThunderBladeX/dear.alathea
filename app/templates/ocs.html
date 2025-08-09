@@ -4,13 +4,13 @@
 <div class="ocs-page">
     <div class="page-header">
         <h1>My Characters</h1>
-        <a href="{{ url_for('index') }}" class="back-link">← Back Home</a>
+        <a href="{{ url_for('main.index') }}" class="back-link">← Back Home</a>
     </div>
 
     <div class="ocs-container">
         <div class="ocs-grid stagger-animation">
             {% for oc in ocs %}
-            <div class="oc-folder" onclick="window.location.href='{{ url_for('oc_detail', oc_id=oc.id) }}'">
+            <div class="oc-folder" onclick="window.location.href='{{ url_for('ocs.oc_detail', oc_id=oc.id) }}'">
                 <div class="folder-tab">{{ oc.name }}</div>
                 <div class="folder-content">
                     {% if oc.profile_image %}
