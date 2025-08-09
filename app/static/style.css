@@ -10,7 +10,7 @@
   --soft-lavender:#B8A9C9;
   --vintage-blue:#7A94A6;
   --golden-honey:#E6D3A3;
-  --deep-forest:#3E4A3B;
+  --deep-forest:#546650;
   --coral-blush:#E2A394;
   --misty-green:#A8B5A0;
   --dusty-purple:#A394A8;
@@ -68,9 +68,39 @@
   --shadow-elevation-3:0 8px 24px var(--shadow-strong);
   --blur-glass:blur(10px)
 }
-.theme-autumn{--cream-base:#FFF4E6;--dusty-rose:#C17A74;--sage-primary:#8B7355;--golden-honey:#D4A574;--soft-lavender:#B08B7A;--vintage-blue:#6B5B73;--coral-blush:#CC8B65;--gradient-sunset:linear-gradient(135deg, #D4A574 0%, #C17A74 50%, #B08B7A 100%);--gradient-morning:linear-gradient(45deg, #FFF4E6 0%, #D4A574 100%)}
-.theme-spring{--cream-base:#F8FFF8;--dusty-rose:#F8C8DC;--sage-primary:#90EE90;--golden-honey:#FFE135;--soft-lavender:#DDA0DD;--vintage-blue:#87CEEB;--coral-blush:#FFB6C1;--gradient-sunset:linear-gradient(135deg, #FFE135 0%, #F8C8DC 50%, #DDA0DD 100%);--gradient-morning:linear-gradient(45deg, #F8FFF8 0%, #FFE135 100%)}
-.theme-winter{--cream-base:#F0F8FF;--dusty-rose:#B6D7FF;--sage-primary:#4F94CD;--golden-honey:#E6E6FA;--soft-lavender:#C8C8FF;--vintage-blue:#6495ED;--coral-blush:#DDA0DD;--gradient-sunset:linear-gradient(135deg, #E6E6FA 0%, #B6D7FF 50%, #C8C8FF 100%);--gradient-morning:linear-gradient(45deg, #F0F8FF 0%, #E6E6FA 100%)}
+.theme-autumn{
+  --cream-base:#FFF4E6;
+  --dusty-rose:#C17A74;
+  --sage-primary:#8B7355;
+  --golden-honey:#D4A574;
+  --soft-lavender:#B08B7A;
+  --vintage-blue:#6B5B73;
+  --coral-blush:#CC8B65;
+  --gradient-sunset:linear-gradient(135deg, #D4A574 0%, #C17A74 50%, #B08B7A 100%);
+  --gradient-morning:linear-gradient(45deg, #FFF4E6 0%, #D4A574 100%)
+}
+.theme-spring{
+  --cream-base:#F8FFF8;
+  --dusty-rose:#F8C8DC;
+  --sage-primary:#90EE90;
+  --golden-honey:#FFE135;
+  --soft-lavender:#DDA0DD;
+  --vintage-blue:#87CEEB;
+  --coral-blush:#FFB6C1;
+  --gradient-sunset:linear-gradient(135deg, #FFE135 0%, #F8C8DC 50%, #DDA0DD 100%);
+  --gradient-morning:linear-gradient(45deg, #F8FFF8 0%, #FFE135 100%)
+}
+.theme-winter{
+  --cream-base:#F0F8FF;
+  --dusty-rose:#B6D7FF;
+  --sage-primary:#4F94CD;
+  --golden-honey:#E6E6FA;
+  --soft-lavender:#C8C8FF;
+  --vintage-blue:#6495ED;
+  --coral-blush:#DDA0DD;
+  --gradient-sunset:linear-gradient(135deg, #E6E6FA 0%, #B6D7FF 50%, #C8C8FF 100%);
+  --gradient-morning:linear-gradient(45deg, #F0F8FF 0%, #E6E6FA 100%)
+}
 .tooltip::after,.tooltip::before{left:50%;transform:translateX(-50%)}
 .container,body{min-height:100vh}
 .auth-form h2,.error-container h1{text-shadow:1px 1px 2px rgba(255,255,255,.8)}
