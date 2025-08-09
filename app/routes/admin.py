@@ -7,7 +7,13 @@ import os
 import uuid
 from PIL import Image
 
-admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
+admin_bp = Blueprint(
+    'admin',
+    __name__,
+    template_folder='../templates',
+    static_folder='../static',
+    url_prefix='/admin'
+)
 
 @admin_bp.route('/upload', methods=['GET', 'POST'])
 @admin_required
