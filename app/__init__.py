@@ -122,48 +122,6 @@ def create_app():
         
         app.logger.info("Fallback template globals registered")
 
-    @app.route('/calculate_commission', methods=['POST'])
-    def calculate_commission():
-        try:
-            data = request.get_json()  # Get the JSON data from the request
-
-            # Extract data from the JSON
-            art_type = data.get('type')
-            multiple_characters = data.get('multiple_characters', False) # default to False if not present
-            nsfw = data.get('nsfw', False)
-            rush = data.get('rush', False)
-            unrendered = data.get('unrendered', False)
-            indonesian = data.get('indonesian', False)
-
-            # Determine base price
-            if art_type == 'bust':
-                base_price = 25
-            elif art_type == 'half':
-                base_price = 40
-            elif art_type == 'full':
-                base_price = 60
-            else:
-                return jsonify({'error': 'Invalid art type'}), 400  # Bad Request
-
-            total_price = base_price
-
-            # Apply modifiers
-            if multiple_characters:
-                total_price *= 1.30
-            if nsfw:
-                total_price *= 1.25
-            if rush:
-                total_price *= 1.50
-            if unrendered:
-                total_price *= 0.50
-            if indonesian:
-                total_price *= 0.625
-
-            return jsonify({'base_price': base_price, 'total_price': round(total_price, 2)})
-
-        except Exception as e:
-            return jsonify({'error': str(e)}), 500
-    
     @app.errorhandler(500)
     def internal_error(error):
         app.logger.exception(f"500 error: {error}")
