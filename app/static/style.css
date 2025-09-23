@@ -50,6 +50,7 @@
   --cream-base:#271A18;
   --warm-white:#FFE4E8;
   --dusty-rose:#C17A74;
+  --warm-brown:#A67B5B;
   --sage-primary:#8B7355;
   --golden-honey:#C08E89;
   --soft-lavender:#B08B7A;
@@ -66,8 +67,8 @@
   --border-accent:var(--dusty-rose);
   --border-strong:var(--sage-primary);
   --border-warm:var(--warm-brown);
-  --shadow-warm:rgba(255,0,16,0.2);
-  --shadow-soft:rgba(166,107,107,0.15);
+  --shadow-warm:rgba(166,91,93,0.2);
+  --shadow-soft:rgba(188,120,122,0.15);
   --shadow-strong:rgba(76,49,46,0.3);
   --gradient-sunset:linear-gradient(135deg,var(--golden-honey) 0%,var(--dusty-rose) 50%,var(--soft-lavender) 100%);
   --gradient-morning:linear-gradient(45deg,var(--cream-base) 0%,var(--golden-honey) 100%);
