@@ -71,7 +71,7 @@
             <div class="scrollable-content">
                 <!-- Gallery Section -->
                 <div class="content-section gallery-section active">
-                    <h3 class="section-title">✨ Recent Artwork ✨</h3>
+                    <h3 class="section-title">🎀 Recent Artwork 🎀</h3>
                     <div class="gallery-grid">
                         {% for image in gallery_images %}
                         <div class="gallery-item" 
@@ -108,7 +108,7 @@
 
                 <!-- Blog Section -->
                 <div class="content-section blog-section">
-                    <h3 class="section-title">📝 Recent Thoughts 📝</h3>
+                    <h3 class="section-title">🦋 Life Updates 🦋</h3>
                     <div class="blog-posts">
                         {% for post in blog_posts %}
                         <article class="blog-preview" onclick="window.location.href='{{ url_for('blog.post_detail', post_id=post.id) }}'">
