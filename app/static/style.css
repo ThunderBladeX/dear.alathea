@@ -19,22 +19,22 @@
   --text-light:var(--warm-white);
   --bg-primary:var(--cream-base);
   --bg-secondary:var(--warm-white);
-  --bg-card:rgba(253, 248, 240, 0.95);
-  --bg-overlay:rgba(143, 166, 142, 0.15);
-  --bg-glass:rgba(255, 255, 255, 0.8);
-  --bg-modal:rgba(0, 0, 0, 0.9);
-  --bg-tooltip:rgba(62, 74, 59, 0.95);
+  --bg-card:rgba(253,248,240,0.95);
+  --bg-overlay:rgba(143,166,142,0.15);
+  --bg-glass:rgba(255,255,255,0.8);
+  --bg-modal:rgba(0,0,0,0.9);
+  --bg-tooltip:rgba(62,74,59,0.95);
   --border-soft:var(--rose-quartz);
   --border-accent:var(--dusty-rose);
   --border-strong:var(--sage-primary);
   --border-warm:var(--warm-brown);
-  --shadow-warm:rgba(166, 123, 91, 0.2);
-  --shadow-soft:rgba(143, 166, 142, 0.15);
-  --shadow-strong:rgba(62, 74, 59, 0.3);
-  --shadow-modal:rgba(0, 0, 0, 0.5);
+  --shadow-warm:rgba(166,123,91,0.2);
+  --shadow-soft:rgba(143,166,142,0.15);
+  --shadow-strong:rgba(62,74,59,0.3);
+  --shadow-modal:rgba(0,0,0,0.5);
   --gradient-sunset:linear-gradient(135deg, var(--golden-honey) 0%, var(--dusty-rose) 50%, var(--soft-lavender) 100%);
   --gradient-morning:linear-gradient(45deg, var(--cream-base) 0%, var(--golden-honey) 100%);
-  --focus-glow:rgba(196, 154, 154, 0.3);
+  --focus-glow:rgba(196,154,154,0.3);
   --font-heading:'Playfair Display',serif;
   --font-body:'Crimson Text',serif;
   --font-accent:'Dancing Script',cursive;
@@ -55,11 +55,14 @@
   --vintage-blue:#6B5B73;
   --coral-blush:#CC8B65;
   --deep-forest:#654321;
+  --text-light:#FFE4E8;
   --bg-card:rgba(108,68,61,0.9);
   --gradient-sunset:linear-gradient(135deg, #D4A574 0%, #C17A74 50%, #B08B7A 100%);
   --gradient-morning:linear-gradient(45deg, #271A18 0%, #B9938F 100%);
-  --text-light:#FFF4E6;
-  --bg-tooltip:rgba(85, 50, 51, 0.95)
+  --bg-tooltip:rgba(85,50,51,0.95);
+  --shadow-warm:rgba(255,0,16,0.2);
+  --shadow-soft:rgba(166,107,107,0.15);
+  --shadow-strong:rgba(62,7,0,0.3)
 }
 .theme-spring{
   --cream-base:#F8FFF8;
