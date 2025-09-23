@@ -56,6 +56,8 @@
   --coral-blush:#CC8B65;
   --deep-forest:#654321;
   --bg-card:rgba(108,68,61,0.9);
+  --gradient-sunset:linear-gradient(135deg, #D4A574 0%, #C17A74 50%, #B08B7A 100%);
+  --gradient-morning:linear-gradient(45deg, #FFF4E6 0%, #B9938F 100%);
   --text-light:#FFF4E6;
   --bg-tooltip:rgba(85, 50, 51, 0.95)
 }
