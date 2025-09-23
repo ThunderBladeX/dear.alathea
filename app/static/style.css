@@ -57,12 +57,15 @@
   --deep-forest:#E4B890;
   --text-light:#FFE4E8;
   --bg-card:rgba(108,68,61,0.9);
-  --gradient-sunset:linear-gradient(135deg, #D4A574 0%, #C17A74 50%, #B08B7A 100%);
-  --gradient-morning:linear-gradient(45deg, #271A18 0%, #B9938F 100%);
+  --gradient-sunset:linear-gradient(135deg,var(--golden-honey) 0%,var(--dusty-rose) 50%,var(--soft-lavender) 100%);
+  --gradient-morning:linear-gradient(45deg,var(--cream-base) 0%,var(--golden-honey) 100%);
   --bg-tooltip:rgba(85,50,51,0.95);
   --shadow-warm:rgba(255,0,16,0.2);
   --shadow-soft:rgba(166,107,107,0.15);
-  --shadow-strong:rgba(62,7,0,0.3)
+  --shadow-strong:rgba(62,7,0,0.3);
+  --shadow-elevation-1:0 2px 8px var(--shadow-soft);
+  --shadow-elevation-2:0 4px 16px var(--shadow-warm);
+  --shadow-elevation-3:0 8px 24px var(--shadow-strong);
 }
 .theme-spring{
   --cream-base:#F8FFF8;
