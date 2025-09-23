@@ -47,10 +47,10 @@
   --blur-glass:blur(10px)
 }
 .theme-autumn{
-  --cream-base:#271A18;
+  --cream-base:#281A18;
   --warm-white:#FFE4E8;
   --sage-primary:#8B5855;
-  --dusty-rose:#C17A74;
+  --dusty-rose:#8B5C57;
   --rose-quartz:#5C3634;
   --warm-brown:#A65F5B;
   --soft-lavender:#B08B7A;
@@ -59,20 +59,20 @@
   --deep-forest:#E4B890;
   --coral-blush:#E29894;
   --text-primary:var(--deep-forest);
-  --text-secondary:#5A3B3A;
-  --text-muted:#7A5C5A;
+  --text-secondary:#5A3735;
+  --text-muted:#7B5553;
   --text-light:var(--warm-white);
   --bg-primary:var(--cream-base);
   --bg-secondary:var(--warm-white);
   --bg-card:rgba(108,68,61,0.9);
-  --bg-tooltip:rgba(85,50,51,0.95);
+  --bg-tooltip:rgba(74,47,44,0.95);
   --border-soft:var(--rose-quartz);
   --border-accent:var(--dusty-rose);
   --border-strong:var(--sage-primary);
   --border-warm:var(--warm-brown);
   --shadow-warm:rgba(166,91,93,0.2);
-  --shadow-soft:rgba(188,120,122,0.15);
-  --shadow-strong:rgba(76,49,46,0.3);
+  --shadow-soft:rgba(166,98,100,0.15);
+  --shadow-strong:rgba(74,47,44,0.3);
   --gradient-sunset:linear-gradient(135deg,var(--golden-honey) 0%,var(--dusty-rose) 50%,var(--soft-lavender) 100%);
   --gradient-morning:linear-gradient(45deg,var(--cream-base) 0%,var(--golden-honey) 100%);
   --shadow-elevation-1:0 2px 8px var(--shadow-soft);
