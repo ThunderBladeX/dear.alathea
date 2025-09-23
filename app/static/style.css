@@ -49,16 +49,18 @@
 .theme-autumn{
   --cream-base:#271A18;
   --warm-white:#FFE4E8;
-  --sage-primary:#8B7355;
+  --sage-primary:#8B5855;
   --dusty-rose:#C17A74;
-  --rose-quartz:#653F3B;
+  --rose-quartz:#5C3634;
   --warm-brown:#A65F5B;
-  --golden-honey:#C08E89;
   --soft-lavender:#B08B7A;
   --vintage-blue:#6B5B73;
-  --coral-blush:#CC8B65;
+  --golden-honey:#C08E89;
   --deep-forest:#E4B890;
+  --coral-blush:#E29894;
   --text-primary:var(--deep-forest);
+  --text-secondary:#5A3B3A;
+  --text-muted:#7A5C5A;
   --text-light:var(--warm-white);
   --bg-primary:var(--cream-base);
   --bg-secondary:var(--warm-white);
