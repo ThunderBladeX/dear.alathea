@@ -361,6 +361,7 @@ body{background:var(--gradient-morning);background-attachment:fixed;line-height:
   .oc-header,.page-header{flex-direction:column;gap:15px;text-align:center}
   .auth-form,.error-container,.left-sidebar,.main-content,.theme-options{backdrop-filter:none}
   .comm-header{text-shadow:none}
+  .comm-header h1{font-size:2rem}
 }
 @media (max-width:480px){
   .lightbox-next,.lightbox-prev{width:40px;height:40px;font-size:18px}
