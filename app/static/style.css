@@ -50,7 +50,8 @@
   --shadow-elevation-3:0 8px 24px var(--shadow-strong);
   --blur-glass:blur(10px);
   --light-layer:rgba(255,255,255,.2);
-  --lighter-layer:rgba(255,255,255,.3)
+  --lighter-layer:rgba(255,255,255,.3);
+  --placeholder:#757575
 }
 .theme-autumn{
   --cream-base:#291917;
@@ -92,7 +93,8 @@
   --shadow-elevation-2:0 4px 16px var(--shadow-warm);
   --shadow-elevation-3:0 8px 24px var(--shadow-strong);
   --light-layer:rbga(76,41,42,.2);
-  --lighter-layer:rgba(76,41,42,.3)
+  --lighter-layer:rgba(76,41,42,.3);
+  --placeholder:#542630
 }
 .theme-spring{
   --cream-base:#F8FFF8;
@@ -159,6 +161,7 @@
 .search-container{position:relative;margin-left:auto}
 .search-clear,.tooltip::after,.tooltip::before{position:absolute;transition:.3s}
 .search-input{padding:8px 35px 8px 15px;border:2px solid var(--border-soft);border-radius:var(--radius-full);font-size:.9rem;background:var(--bg-glass);width:250px;transition:.3s}
+.search-input::placeholder{color:var(--placeholder}
 .search-input:focus{border-color:var(--dusty-rose);width:300px;background:var(--bg-secondary)}
 .search-clear{right:8px;background:0 0;border:none;font-size:18px;color:var(--text-secondary);cursor:pointer;width:20px;height:20px;justify-content:center;border-radius:50%}
 .search-match{animation:.5s searchHighlight}
