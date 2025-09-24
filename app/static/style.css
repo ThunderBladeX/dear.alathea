@@ -44,7 +44,8 @@
   --shadow-elevation-1:0 2px 8px var(--shadow-soft);
   --shadow-elevation-2:0 4px 16px var(--shadow-warm);
   --shadow-elevation-3:0 8px 24px var(--shadow-strong);
-  --blur-glass:blur(10px)
+  --blur-glass:blur(10px);
+  --lighter-layer:rgba(255,255,255,.3)
 }
 .theme-autumn{
   --cream-base:#281A18;
@@ -81,6 +82,7 @@
   --shadow-elevation-1:0 2px 8px var(--shadow-soft);
   --shadow-elevation-2:0 4px 16px var(--shadow-warm);
   --shadow-elevation-3:0 8px 24px var(--shadow-strong);
+  --lighter-layer:rgba(0,0,0,.3)
 }
 .theme-spring{
   --cream-base:#F8FFF8;
@@ -92,7 +94,7 @@
   --coral-blush:#FFB6C1;
   --gradient-sunset:linear-gradient(135deg, #FFE135 0%, #F8C8DC 50%, #DDA0DD 100%);
   --gradient-morning:linear-gradient(45deg, #F8FFF8 0%, #FFE135 100%);
-  --bg-card:rgba(34,139,34,0.9);
+  --bg-card:rgba(34,139,34,.9);
   --text-light:#F8FFF8
 }
 .theme-winter{
@@ -105,7 +107,7 @@
   --coral-blush:#DDA0DD;
   --gradient-sunset:linear-gradient(135deg, #E6E6FA 0%, #B6D7FF 50%, #C8C8FF 100%);
   --gradient-morning:linear-gradient(45deg, #F0F8FF 0%, #E6E6FA 100%);
-  --bg-card:rgba(47,79,79,0.9);
+  --bg-card:rgba(47,79,79,.9);
   --text-light:#F0F8FF
 }
 .tooltip::after,.tooltip::before{left:50%;transform:translateX(-50%)}
@@ -120,11 +122,11 @@
 .lightbox-image{max-width:100%;max-height:80vh;object-fit:contain;border-radius:var(--radius-soft);box-shadow:var(--shadow-elevation-3);transition:opacity .3s}
 .lightbox-close{position:absolute;top:-50px;right:-50px;width:40px;height:40px;border-radius:50%}
 .lightbox-next,.lightbox-prev,.theme-toggle{width:50px;height:50px;transition:.3s;cursor:pointer}
-.lightbox-close:hover{background:rgba(255,255,255,.3);transform:scale(1.1)}
+.lightbox-close:hover{background:var(--lighter-layer);transform:scale(1.1)}
 .lightbox-next,.lightbox-prev{position:absolute;top:50%;transform:translateY(-50%);border-radius:50%}
 .lightbox-prev{left:-70px}
 .lightbox-next{right:-70px}
-.lightbox-next:hover,.lightbox-prev:hover{background:rgba(255,255,255,.3);transform:translateY(-50%) scale(1.1)}
+.lightbox-next:hover,.lightbox-prev:hover{background:var(--lighter-layer);transform:translateY(-50%) scale(1.1)}
 .search-clear:hover,.theme-option:hover{background:var(--dusty-rose);color:var(--text-light)}
 .lightbox-info{position:absolute;bottom:-80px;left:0;right:0;text-align:center;color:var(--text-light)}
 .search-input,.theme-option,.theme-toggle,body{color:var(--text-primary)}
