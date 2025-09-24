@@ -1,5 +1,5 @@
 .auth-subtitle,.comm-subtitle,.info-text,.ip-notice small,.post-date,.welcome-msg{font-style:italic}
-.comm-header h1,.error-code,.oc-name,.page-header h1,.section-title,.username{text-shadow:2px 2px 4px var(--bg-glass)}
+.comm-header,.error-code,.oc-name,.page-header h1,.section-title,.username{text-shadow:2px 2px 4px var(--bg-glass)}
 .auth-link a,.back-home-btn,.back-link,.nav-link,.nav-tab,.social-link{text-decoration:none}
 :root{
   --cream-base:#FDF8F0;
@@ -53,7 +53,7 @@
   --lighter-layer:rgba(255,255,255,.3)
 }
 .theme-autumn{
-  --cream-base:#4F3330;
+  --cream-base:#291917;
   --warm-white:#FFE4E8;
   --sage-primary:#8B5855;
   --dusty-rose:#C17A74;
@@ -86,7 +86,7 @@
   --shadow-soft:rgba(106,38,40,.15);
   --shadow-strong:rgba(74,47,44,.3);
   --gradient-sunset:linear-gradient(135deg,var(--golden-honey) 0%,var(--dusty-rose) 50%,var(--soft-lavender) 100%);
-  --gradient-morning:linear-gradient(45deg,var(--cream-base) 0%,var(--golden-honey) 100%);
+  --gradient-morning:linear-gradient(45deg,var(--cream-base) 0%,#AE675F 50%,var(--golden-honey) 100%);
   --focus-glow:rgba(146,104,104,.3);
   --shadow-elevation-1:0 2px 8px var(--shadow-soft);
   --shadow-elevation-2:0 4px 16px var(--shadow-warm);
@@ -360,6 +360,7 @@ body{background:var(--gradient-morning);background-attachment:fixed;line-height:
   .gallery-masonry{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
   .oc-header,.page-header{flex-direction:column;gap:15px;text-align:center}
   .auth-form,.error-container,.left-sidebar,.main-content,.theme-options{backdrop-filter:none}
+  .comm-header{text-shadow:none}
 }
 @media (max-width:480px){
   .lightbox-next,.lightbox-prev{width:40px;height:40px;font-size:18px}
