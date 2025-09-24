@@ -86,7 +86,7 @@
   --shadow-soft:rgba(106,38,40,.15);
   --shadow-strong:rgba(74,47,44,.3);
   --gradient-sunset:linear-gradient(135deg,var(--golden-honey) 0%,var(--dusty-rose) 50%,var(--soft-lavender) 100%);
-  --gradient-morning:linear-gradient(45deg,var(--cream-base) 0%,#AE675F 50%,var(--golden-honey) 100%);
+  --gradient-morning:linear-gradient(45deg,var(--cream-base) 0%,#9D5C55 50%,var(--golden-honey) 100%);
   --focus-glow:rgba(146,104,104,.3);
   --shadow-elevation-1:0 2px 8px var(--shadow-soft);
   --shadow-elevation-2:0 4px 16px var(--shadow-warm);
