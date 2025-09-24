@@ -85,7 +85,7 @@
   --shadow-warm:rgba(106,31,33,.2);
   --shadow-soft:rgba(106,38,40,.15);
   --shadow-strong:rgba(74,47,44,.3);
-  --gradient-sunset:linear-gradient(135deg,var(--golden-honey) 0%,var(--dusty-rose) 50%,var(--soft-lavender) 100%);
+  --gradient-sunset:linear-gradient(135deg,var(--honey-cream) 0%,var(--dusty-rose) 50%,var(--soft-lavender) 100%);
   --gradient-morning:linear-gradient(45deg,var(--cream-base) 0%,var(--golden-honey) 100%);
   --focus-glow:rgba(146,104,104,.3);
   --shadow-elevation-1:0 2px 8px var(--shadow-soft);
@@ -402,5 +402,5 @@ body{background:var(--gradient-morning);background-attachment:fixed;line-height:
   .auth-form,.lightbox-content{background:var(--bg-card)}
   input,select,textarea{background:var(--warm-white);color:var(--text-primary);border-color:var(--border-soft)}
   input:focus,select:focus,textarea:focus{border-color:var(--dusty-rose);background:#404040}
-  .auth-form h2,.comm-header h1,.error-code,.error-container h1,.oc-name,.page-header h1,.section-title,.username{text-shadow:2px 2px 4px rgba(0,0,0,.8)}
+  .auth-form h2,.comm-header h1,.error-code,.error-container h1,.oc-name,.page-header h1,.section-title,.username{text-shadow:2px 2px 4px var(--shadow-strong)}
 }
