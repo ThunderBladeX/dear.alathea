@@ -48,7 +48,7 @@
   --lighter-layer:rgba(255,255,255,.3)
 }
 .theme-autumn{
-  --cream-base:#281A18;
+  --cream-base:#4F3330;
   --warm-white:#FFE4E8;
   --sage-primary:#8B5855;
   --dusty-rose:#C17A74;
@@ -82,7 +82,7 @@
   --shadow-elevation-1:0 2px 8px var(--shadow-soft);
   --shadow-elevation-2:0 4px 16px var(--shadow-warm);
   --shadow-elevation-3:0 8px 24px var(--shadow-strong);
-  --lighter-layer:rgba(0,0,0,.3)
+  --lighter-layer:rgba(19,11,12,.3)
 }
 .theme-spring{
   --cream-base:#F8FFF8;
