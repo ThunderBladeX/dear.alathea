@@ -13,9 +13,9 @@
   --golden-honey:#E6D3A3;
   --deep-forest:#546650;
   --coral-blush:#E2A394;
-  --lavender-mist: #E6D7F0;
-  --honey-cream: #F5E6A3;
-  --blush-pink: #F8D7DA;
+  --lavender-mist:#E6D7F0;
+  --honey-cream:#F5E6A3;
+  --blush-pink:#F8D7DA;
   --text-primary:var(--deep-forest);
   --text-secondary:#5A4A3A;
   --text-muted:#7A6A5A;
@@ -31,7 +31,7 @@
   --border-accent:var(--dusty-rose);
   --border-strong:var(--sage-primary);
   --border-warm:var(--warm-brown);
-  --hover-lift: 0 8px 25px var(--shadow-warm);
+  --hover-lift:0 8px 25px var(--shadow-warm);
   --shadow-warm:rgba(166,123,91,.2);
   --shadow-soft:rgba(143,166,142,.15);
   --shadow-strong:rgba(62,74,59,.3);
@@ -64,6 +64,9 @@
   --golden-honey:#C08E89;
   --deep-forest:#E4B890;
   --coral-blush:#E29894;
+  --lavender-mist:#92807F;
+  --honey-cream:#FFDBC7;
+  --blush-pink:#CC8483;
   --text-primary:var(--deep-forest);
   --text-secondary:#D4978B;
   --text-muted:#7B5553;
@@ -78,6 +81,7 @@
   --border-accent:var(--dusty-rose);
   --border-strong:var(--sage-primary);
   --border-warm:var(--warm-brown);
+  --hover-lift:0 8px 25px var(--shadow-warm);
   --shadow-warm:rgba(106,31,33,.2);
   --shadow-soft:rgba(106,38,40,.15);
   --shadow-strong:rgba(74,47,44,.3);
