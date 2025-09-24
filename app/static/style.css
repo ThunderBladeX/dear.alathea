@@ -1,5 +1,5 @@
 .auth-subtitle,.comm-subtitle,.info-text,.ip-notice small,.post-date,.welcome-msg{font-style:italic}
-.comm-header h1,.error-code,.oc-name,.page-header h1,.section-title,.username{text-shadow:2px 2px 4px rgba(255,255,255,.8)}
+.comm-header h1,.error-code,.oc-name,.page-header h1,.section-title,.username{text-shadow:2px 2px 4px var(--bg-glass)}
 .auth-link a,.back-home-btn,.back-link,.nav-link,.nav-tab,.social-link{text-decoration:none}
 :root{
   --cream-base:#FDF8F0;
@@ -19,9 +19,9 @@
   --text-light:var(--warm-white);
   --bg-primary:var(--cream-base);
   --bg-secondary:var(--warm-white);
-  --bg-card:rgba(253,248,240,0.95);
+  --bg-card:rgba(253,248,240,.95);
   --bg-overlay:var(--shadow-soft);
-  --bg-glass:rgba(255,255,255,0.8);
+  --bg-glass:rgba(255,255,255,.8);
   --bg-modal:rgba(0,0,0,0.9);
   --bg-tooltip:rgba(62,74,59,0.95);
   --border-soft:var(--rose-quartz);
