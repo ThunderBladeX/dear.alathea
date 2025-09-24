@@ -65,10 +65,10 @@
   --deep-forest:#E4B890;
   --coral-blush:#E29894;
   --lavender-mist:#976655;
-  --honey-cream:#FFDBC7;
+  --honey-cream:#D4978B;
   --blush-pink:#A9726F;
   --text-primary:var(--deep-forest);
-  --text-secondary:#D4978B;
+  --text-secondary:#FFDBC7;
   --text-muted:#7B5553;
   --text-light:var(--warm-white);
   --bg-primary:var(--cream-base);
@@ -85,7 +85,7 @@
   --shadow-warm:rgba(106,31,33,.2);
   --shadow-soft:rgba(106,38,40,.15);
   --shadow-strong:rgba(74,47,44,.3);
-  --gradient-sunset:linear-gradient(135deg,var(--honey-cream) 0%,var(--dusty-rose) 50%,var(--soft-lavender) 100%);
+  --gradient-sunset:linear-gradient(135deg,var(--cream-base) 0%,var(--dusty-rose) 50%,var(--soft-lavender) 100%);
   --gradient-morning:linear-gradient(45deg,var(--cream-base) 0%,var(--golden-honey) 100%);
   --focus-glow:rgba(146,104,104,.3);
   --shadow-elevation-1:0 2px 8px var(--shadow-soft);
