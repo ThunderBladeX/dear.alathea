@@ -67,7 +67,7 @@
   --coral-blush:#E29894;
   --lavender-mist:#976655;
   --honey-cream:#D4978B;
-  --blush-pink:#C2726F;
+  --blush-pink:#A9615E;
   --text-primary:var(--deep-forest);
   --text-secondary:#FFDBC7;
   --text-muted:#7B5553;
@@ -94,7 +94,7 @@
   --shadow-elevation-3:0 8px 24px var(--shadow-strong);
   --light-layer:rbga(76,41,42,.2);
   --lighter-layer:rgba(76,41,42,.3);
-  --placeholder:var(--bg-card)
+  --placeholder:var(--golden-honey)
 }
 .theme-spring{
   --cream-base:#F8FFF8;
