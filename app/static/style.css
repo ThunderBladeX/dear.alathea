@@ -161,9 +161,9 @@
 .search-container{position:relative;margin-left:auto}
 .search-clear,.tooltip::after,.tooltip::before{position:absolute;transition:.3s}
 .search-input{padding:8px 35px 8px 15px;border:2px solid var(--border-soft);border-radius:var(--radius-full);font-size:.9rem;background:var(--bg-glass);width:250px;transition:.3s}
-.search-input::placeholder{color:var(--placeholder)}
+.search-input::placeholder,.search-clear{color:var(--placeholder)}
 .search-input:focus{border-color:var(--dusty-rose);width:300px;background:var(--bg-secondary)}
-.search-clear{right:8px;background:0 0;border:none;font-size:18px;color:var(--text-secondary);cursor:pointer;width:20px;height:20px;justify-content:center;border-radius:50%}
+.search-clear{right:8px;background:0 0;border:none;font-size:18px;cursor:pointer;width:20px;height:20px;justify-content:center;border-radius:50%}
 .search-match{animation:.5s searchHighlight}
 @keyframes searchHighlight{0%,100%{transform:scale(1)}50%{transform:scale(1.05);box-shadow:0 0 20px var(--golden-honey)}}
 .gallery-item.loaded{animation:.6s forwards fadeInUp}
